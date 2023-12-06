@@ -66,97 +66,86 @@ pub fn create_event_loop() {
                 let _dialog_handle: slint::Weak<auto_close_dialog::AutoCloseDialog> =
                     dialog.as_weak();
 
-                let (width, height) = crate::utils::get_screen_size();
+                match _dialog_handle.upgrade() {
+                    Some(_handle) => {
+                        let (width, height) = crate::utils::get_screen_size();
 
-                if width == -1 && height == -1 {
-                    _dialog_handle
-                        .upgrade()
-                        .unwrap()
-                        .window()
-                        .set_position(slint::PhysicalPosition::new(0, 0));
-                } else {
-                    match my_event.alignment {
-                        (-1, -1) => {
-                            _dialog_handle
-                                .upgrade()
-                                .unwrap()
+                        if width == -1 && height == -1 {
+                            _handle
                                 .window()
                                 .set_position(slint::PhysicalPosition::new(0, 0));
-                        }
-                        (0, -1) => {
-                            _dialog_handle.upgrade().unwrap().window().set_position(
-                                slint::PhysicalPosition::new(
-                                    (0.5 * width as f32) as i32- /*default width*/ 100,
-                                    0,
-                                ),
-                            );
-                        }
-                        (1, -1) => {
-                            _dialog_handle.upgrade().unwrap().window().set_position(
-                                slint::PhysicalPosition::new(width- /*default width*/ 100, 0),
-                            );
-                        }
-                        (-1, 0) => {
-                            _dialog_handle.upgrade().unwrap().window().set_position(
-                                slint::PhysicalPosition::new(
-                                    0,
-                                    (0.5 * height as f32) as i32 - /*default height*/ 50,
-                                ),
-                            );
-                        }
-                        (0, 0) => {
-                            _dialog_handle.upgrade().unwrap().window().set_position(
-                                slint::PhysicalPosition::new(
-                                    (0.5 * width as f32) as i32 - /*default width*/ 100,
-                                    (0.5 * height as f32) as i32 - /*default height*/ 50,
-                                ),
-                            );
-                        }
-                        (1, 0) => {
-                            _dialog_handle.upgrade().unwrap().window().set_position(
-                                slint::PhysicalPosition::new(
-                                    width- /*default width*/ 100,
-                                    (0.5 * height as f32) as i32 - /*default height*/ 50,
-                                ),
-                            );
-                        }
-                        (-1, 1) => {
-                            _dialog_handle.upgrade().unwrap().window().set_position(
-                                slint::PhysicalPosition::new(0, height- /*default height*/ 50),
-                            );
-                        }
-                        (0, 1) => {
-                            _dialog_handle.upgrade().unwrap().window().set_position(
-                                slint::PhysicalPosition::new(
-                                    (0.5 * width as f32) as i32- /*default width*/ 100,
-                                    height- /*default height*/ 50,
-                                ),
-                            );
-                        }
-                        (1, 1) => {
-                            _dialog_handle.upgrade().unwrap().window().set_position(
-                                slint::PhysicalPosition::new(
-                                    width- /*default width*/ 100,
-                                    height- /*default height*/ 50,
-                                ),
-                            );
+                        } else {
+                            match my_event.alignment {
+                                (-1, -1) => {
+                                    _handle
+                                        .window()
+                                        .set_position(slint::PhysicalPosition::new(0, 0));
+                                }
+                                (0, -1) => {
+                                    _handle.window().set_position(slint::PhysicalPosition::new(
+                                        (0.5 * width as f32) as i32- /*default width*/ 100,
+                                        0,
+                                    ));
+                                }
+                                (1, -1) => {
+                                    _handle.window().set_position(slint::PhysicalPosition::new(
+                                        width- /*default width*/ 100,
+                                        0,
+                                    ));
+                                }
+                                (-1, 0) => {
+                                    _handle.window().set_position(slint::PhysicalPosition::new(
+                                        0,
+                                        (0.5 * height as f32) as i32 - /*default height*/ 50,
+                                    ));
+                                }
+                                (0, 0) => {
+                                    _handle.window().set_position(slint::PhysicalPosition::new(
+                                        (0.5 * width as f32) as i32 - /*default width*/ 100,
+                                        (0.5 * height as f32) as i32 - /*default height*/ 50,
+                                    ));
+                                }
+                                (1, 0) => {
+                                    _handle.window().set_position(slint::PhysicalPosition::new(
+                                        width- /*default width*/ 100,
+                                        (0.5 * height as f32) as i32 - /*default height*/ 50,
+                                    ));
+                                }
+                                (-1, 1) => {
+                                    _handle.window().set_position(slint::PhysicalPosition::new(
+                                        0,
+                                        height- /*default height*/ 50,
+                                    ));
+                                }
+                                (0, 1) => {
+                                    _handle.window().set_position(slint::PhysicalPosition::new(
+                                        (0.5 * width as f32) as i32- /*default width*/ 100,
+                                        height- /*default height*/ 50,
+                                    ));
+                                }
+                                (1, 1) => {
+                                    _handle.window().set_position(slint::PhysicalPosition::new(
+                                        width- /*default width*/ 100,
+                                        height- /*default height*/ 50,
+                                    ));
+                                }
+
+                                _ => {
+                                    _handle
+                                        .window()
+                                        .set_position(slint::PhysicalPosition::new(0, 0));
+                                }
+                            }
                         }
 
-                        _ => {
-                            _dialog_handle
-                                .upgrade()
-                                .unwrap()
-                                .window()
-                                .set_position(slint::PhysicalPosition::new(0, 0));
+                        if let Some(s) = my_event.title {
+                            _handle.set_window_title(s.into());
+                        }
+                        if let Some(s) = my_event.content {
+                            _handle.set_content(s.into());
                         }
                     }
-                }
-
-                if let Some(s) = my_event.title {
-                    _dialog_handle.upgrade().unwrap().set_window_title(s.into());
-                }
-                if let Some(s) = my_event.content {
-                    _dialog_handle.upgrade().unwrap().set_content(s.into());
+                    None => {}
                 }
 
                 slint::Timer::single_shot(
