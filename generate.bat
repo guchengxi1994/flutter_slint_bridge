@@ -1,0 +1,1 @@
+flutter_rust_bridge_codegen --rust-input fsb/src/api.rs --dart-output fsb_dart/lib/bridge_generated.dart
