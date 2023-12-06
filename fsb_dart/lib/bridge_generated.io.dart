@@ -30,6 +30,11 @@ class FsbPlatform extends FlutterRustBridgeBase<FsbWire> {
   }
 
   @protected
+  ffi.Pointer<ffi.Uint8> api2wire_box_autoadd_u8(int raw) {
+    return inner.new_box_autoadd_u8_0(api2wire_u8(raw));
+  }
+
+  @protected
   ffi.Pointer<wire_uint_8_list> api2wire_opt_String(String? raw) {
     return raw == null ? ffi.nullptr : api2wire_String(raw);
   }
@@ -37,6 +42,11 @@ class FsbPlatform extends FlutterRustBridgeBase<FsbWire> {
   @protected
   ffi.Pointer<wire_EventMessage> api2wire_opt_box_autoadd_event_message(EventMessage? raw) {
     return raw == null ? ffi.nullptr : api2wire_box_autoadd_event_message(raw);
+  }
+
+  @protected
+  ffi.Pointer<ffi.Uint8> api2wire_opt_box_autoadd_u8(int? raw) {
+    return raw == null ? ffi.nullptr : api2wire_box_autoadd_u8(raw);
   }
 
   @protected
@@ -63,6 +73,7 @@ class FsbPlatform extends FlutterRustBridgeBase<FsbWire> {
     wireObj.title = api2wire_opt_String(apiObj.title);
     wireObj.content = api2wire_opt_String(apiObj.content);
     wireObj.dialog_type = api2wire_dialog_type(apiObj.dialogType);
+    wireObj.duration_in_sec = api2wire_opt_box_autoadd_u8(apiObj.durationInSec);
   }
 }
 
@@ -192,6 +203,18 @@ class FsbWire implements FlutterRustBridgeWireBase {
   late final _new_box_autoadd_event_message_0 =
       _new_box_autoadd_event_message_0Ptr.asFunction<ffi.Pointer<wire_EventMessage> Function()>();
 
+  ffi.Pointer<ffi.Uint8> new_box_autoadd_u8_0(
+    int value,
+  ) {
+    return _new_box_autoadd_u8_0(
+      value,
+    );
+  }
+
+  late final _new_box_autoadd_u8_0Ptr =
+      _lookup<ffi.NativeFunction<ffi.Pointer<ffi.Uint8> Function(ffi.Uint8)>>('new_box_autoadd_u8_0');
+  late final _new_box_autoadd_u8_0 = _new_box_autoadd_u8_0Ptr.asFunction<ffi.Pointer<ffi.Uint8> Function(int)>();
+
   ffi.Pointer<wire_uint_8_list> new_uint_8_list_0(
     int len,
   ) {
@@ -243,6 +266,8 @@ final class wire_EventMessage extends ffi.Struct {
 
   @ffi.Int32()
   external int dialog_type;
+
+  external ffi.Pointer<ffi.Uint8> duration_in_sec;
 }
 
 typedef DartPostCObjectFnType

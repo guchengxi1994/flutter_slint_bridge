@@ -35,12 +35,18 @@ class FsbPlatform extends FlutterRustBridgeBase<FsbWire> with FlutterRustBridgeS
   }
 
   @protected
+  int api2wire_box_autoadd_u8(int raw) {
+    return api2wire_u8(raw);
+  }
+
+  @protected
   List<dynamic> api2wire_event_message(EventMessage raw) {
     return [
       api2wire___record__i8_i8(raw.alignment),
       api2wire_opt_String(raw.title),
       api2wire_opt_String(raw.content),
-      api2wire_dialog_type(raw.dialogType)
+      api2wire_dialog_type(raw.dialogType),
+      api2wire_opt_box_autoadd_u8(raw.durationInSec)
     ];
   }
 
@@ -52,6 +58,11 @@ class FsbPlatform extends FlutterRustBridgeBase<FsbWire> with FlutterRustBridgeS
   @protected
   List<dynamic>? api2wire_opt_box_autoadd_event_message(EventMessage? raw) {
     return raw == null ? null : api2wire_box_autoadd_event_message(raw);
+  }
+
+  @protected
+  int? api2wire_opt_box_autoadd_u8(int? raw) {
+    return raw == null ? null : api2wire_box_autoadd_u8(raw);
   }
 
   @protected

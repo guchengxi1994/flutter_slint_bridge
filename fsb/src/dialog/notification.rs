@@ -1,8 +1,8 @@
-use super::PROXY;
+use crate::message::{EventMessage, PROXY};
 
 slint::slint! {
     import { Button , HorizontalBox, VerticalBox} from "std-widgets.slint";
-    export component AutoCloseDialog inherits Window {
+    export component Notification inherits Window {
         in property <string> window_title : "Default";
 
         title: root.window-title;
@@ -18,8 +18,6 @@ slint::slint! {
             background: @linear-gradient (90deg, #cde4ee 0%, #ebf8e1 100%);
         }
 
-        callback close-dialog();
-
         VerticalBox {
             alignment: center;
             HorizontalBox {
@@ -34,7 +32,7 @@ slint::slint! {
     }
 }
 
-pub fn show_auto_close_dialog(message: Option<super::EventMessage>) {
+pub fn show_notification(message: Option<EventMessage>) {
     let r = PROXY.read().unwrap();
 
     match message {
@@ -42,10 +40,7 @@ pub fn show_auto_close_dialog(message: Option<super::EventMessage>) {
             let _ = r.clone().unwrap().send_event(m);
         }
         None => {
-            let _ = r
-                .clone()
-                .unwrap()
-                .send_event(super::EventMessage::default());
+            let _ = r.clone().unwrap().send_event(EventMessage::default());
         }
     }
 }

@@ -20,8 +20,8 @@ use std::sync::Arc;
 
 // Section: imports
 
-use crate::dialog::DialogType;
-use crate::dialog::EventMessage;
+use crate::message::DialogType;
+use crate::message::EventMessage;
 
 // Section: wire functions
 

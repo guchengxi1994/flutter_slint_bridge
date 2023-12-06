@@ -34,11 +34,13 @@ class EventMessage {
   final String? title;
   final String? content;
   final DialogType dialogType;
+  final int? durationInSec;
 
   const EventMessage({
     required this.alignment,
     this.title,
     this.content,
     required this.dialogType,
+    this.durationInSec,
   });
 }

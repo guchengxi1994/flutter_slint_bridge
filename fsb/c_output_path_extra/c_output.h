@@ -24,6 +24,7 @@ typedef struct wire_EventMessage {
   struct wire_uint_8_list *title;
   struct wire_uint_8_list *content;
   int32_t dialog_type;
+  uint8_t *duration_in_sec;
 } wire_EventMessage;
 
 typedef struct DartCObject *WireSyncReturn;
@@ -46,6 +47,8 @@ void wire_show_auto_close_dialog(int64_t port_, struct wire_EventMessage *messag
 
 struct wire_EventMessage *new_box_autoadd_event_message_0(void);
 
+uint8_t *new_box_autoadd_u8_0(uint8_t value);
+
 struct wire_uint_8_list *new_uint_8_list_0(int32_t len);
 
 void free_WireSyncReturn(WireSyncReturn ptr);
@@ -56,6 +59,7 @@ static int64_t dummy_method_to_enforce_bundling(void) {
     dummy_var ^= ((int64_t) (void*) wire_create_event_loop);
     dummy_var ^= ((int64_t) (void*) wire_show_auto_close_dialog);
     dummy_var ^= ((int64_t) (void*) new_box_autoadd_event_message_0);
+    dummy_var ^= ((int64_t) (void*) new_box_autoadd_u8_0);
     dummy_var ^= ((int64_t) (void*) new_uint_8_list_0);
     dummy_var ^= ((int64_t) (void*) free_WireSyncReturn);
     dummy_var ^= ((int64_t) (void*) store_dart_post_cobject);
