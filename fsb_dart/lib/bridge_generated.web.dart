@@ -19,6 +19,45 @@ class FsbPlatform extends FlutterRustBridgeBase<FsbWire> with FlutterRustBridgeS
 
 // Section: api2wire
 
+  @protected
+  String api2wire_String(String raw) {
+    return raw;
+  }
+
+  @protected
+  List<dynamic> api2wire___record__i8_i8((int, int) raw) {
+    return [api2wire_i8(raw.$1), api2wire_i8(raw.$2)];
+  }
+
+  @protected
+  List<dynamic> api2wire_box_autoadd_event_message(EventMessage raw) {
+    return api2wire_event_message(raw);
+  }
+
+  @protected
+  List<dynamic> api2wire_event_message(EventMessage raw) {
+    return [
+      api2wire___record__i8_i8(raw.alignment),
+      api2wire_opt_String(raw.title),
+      api2wire_opt_String(raw.content),
+      api2wire_dialog_type(raw.dialogType)
+    ];
+  }
+
+  @protected
+  String? api2wire_opt_String(String? raw) {
+    return raw == null ? null : api2wire_String(raw);
+  }
+
+  @protected
+  List<dynamic>? api2wire_opt_box_autoadd_event_message(EventMessage? raw) {
+    return raw == null ? null : api2wire_box_autoadd_event_message(raw);
+  }
+
+  @protected
+  Uint8List api2wire_uint_8_list(Uint8List raw) {
+    return raw;
+  }
 // Section: finalizer
 }
 
@@ -36,7 +75,7 @@ class FsbWasmModule implements WasmModule {
 
   external dynamic /* void */ wire_create_event_loop(NativePortType port_);
 
-  external dynamic /* void */ wire_show_auto_close_dialog(NativePortType port_);
+  external dynamic /* void */ wire_show_auto_close_dialog(NativePortType port_, List<dynamic>? message);
 }
 
 // Section: WASM wire connector
@@ -48,5 +87,6 @@ class FsbWire extends FlutterRustBridgeWasmWireBase<FsbWasmModule> {
 
   void wire_create_event_loop(NativePortType port_) => wasmModule.wire_create_event_loop(port_);
 
-  void wire_show_auto_close_dialog(NativePortType port_) => wasmModule.wire_show_auto_close_dialog(port_);
+  void wire_show_auto_close_dialog(NativePortType port_, List<dynamic>? message) =>
+      wasmModule.wire_show_auto_close_dialog(port_, message);
 }

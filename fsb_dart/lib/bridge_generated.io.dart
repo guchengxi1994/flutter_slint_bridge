@@ -17,9 +17,53 @@ class FsbPlatform extends FlutterRustBridgeBase<FsbWire> {
 
 // Section: api2wire
 
+  @protected
+  ffi.Pointer<wire_uint_8_list> api2wire_String(String raw) {
+    return api2wire_uint_8_list(utf8.encoder.convert(raw));
+  }
+
+  @protected
+  ffi.Pointer<wire_EventMessage> api2wire_box_autoadd_event_message(EventMessage raw) {
+    final ptr = inner.new_box_autoadd_event_message_0();
+    _api_fill_to_wire_event_message(raw, ptr.ref);
+    return ptr;
+  }
+
+  @protected
+  ffi.Pointer<wire_uint_8_list> api2wire_opt_String(String? raw) {
+    return raw == null ? ffi.nullptr : api2wire_String(raw);
+  }
+
+  @protected
+  ffi.Pointer<wire_EventMessage> api2wire_opt_box_autoadd_event_message(EventMessage? raw) {
+    return raw == null ? ffi.nullptr : api2wire_box_autoadd_event_message(raw);
+  }
+
+  @protected
+  ffi.Pointer<wire_uint_8_list> api2wire_uint_8_list(Uint8List raw) {
+    final ans = inner.new_uint_8_list_0(raw.length);
+    ans.ref.ptr.asTypedList(raw.length).setAll(0, raw);
+    return ans;
+  }
 // Section: finalizer
 
 // Section: api_fill_to_wire
+
+  void _api_fill_to_wire___record__i8_i8((int, int) apiObj, wire___record__i8_i8 wireObj) {
+    wireObj.field0 = api2wire_i8(apiObj.$1);
+    wireObj.field1 = api2wire_i8(apiObj.$2);
+  }
+
+  void _api_fill_to_wire_box_autoadd_event_message(EventMessage apiObj, ffi.Pointer<wire_EventMessage> wireObj) {
+    _api_fill_to_wire_event_message(apiObj, wireObj.ref);
+  }
+
+  void _api_fill_to_wire_event_message(EventMessage apiObj, wire_EventMessage wireObj) {
+    _api_fill_to_wire___record__i8_i8(apiObj.alignment, wireObj.alignment);
+    wireObj.title = api2wire_opt_String(apiObj.title);
+    wireObj.content = api2wire_opt_String(apiObj.content);
+    wireObj.dialog_type = api2wire_dialog_type(apiObj.dialogType);
+  }
 }
 
 // ignore_for_file: camel_case_types, non_constant_identifier_names, avoid_positional_boolean_parameters, annotate_overrides, constant_identifier_names
@@ -125,15 +169,40 @@ class FsbWire implements FlutterRustBridgeWireBase {
 
   void wire_show_auto_close_dialog(
     int port_,
+    ffi.Pointer<wire_EventMessage> message,
   ) {
     return _wire_show_auto_close_dialog(
       port_,
+      message,
     );
   }
 
   late final _wire_show_auto_close_dialogPtr =
-      _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Int64)>>('wire_show_auto_close_dialog');
-  late final _wire_show_auto_close_dialog = _wire_show_auto_close_dialogPtr.asFunction<void Function(int)>();
+      _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Int64, ffi.Pointer<wire_EventMessage>)>>(
+          'wire_show_auto_close_dialog');
+  late final _wire_show_auto_close_dialog =
+      _wire_show_auto_close_dialogPtr.asFunction<void Function(int, ffi.Pointer<wire_EventMessage>)>();
+
+  ffi.Pointer<wire_EventMessage> new_box_autoadd_event_message_0() {
+    return _new_box_autoadd_event_message_0();
+  }
+
+  late final _new_box_autoadd_event_message_0Ptr =
+      _lookup<ffi.NativeFunction<ffi.Pointer<wire_EventMessage> Function()>>('new_box_autoadd_event_message_0');
+  late final _new_box_autoadd_event_message_0 =
+      _new_box_autoadd_event_message_0Ptr.asFunction<ffi.Pointer<wire_EventMessage> Function()>();
+
+  ffi.Pointer<wire_uint_8_list> new_uint_8_list_0(
+    int len,
+  ) {
+    return _new_uint_8_list_0(
+      len,
+    );
+  }
+
+  late final _new_uint_8_list_0Ptr =
+      _lookup<ffi.NativeFunction<ffi.Pointer<wire_uint_8_list> Function(ffi.Int32)>>('new_uint_8_list_0');
+  late final _new_uint_8_list_0 = _new_uint_8_list_0Ptr.asFunction<ffi.Pointer<wire_uint_8_list> Function(int)>();
 
   void free_WireSyncReturn(
     WireSyncReturn ptr,
@@ -149,6 +218,32 @@ class FsbWire implements FlutterRustBridgeWireBase {
 }
 
 final class _Dart_Handle extends ffi.Opaque {}
+
+final class wire___record__i8_i8 extends ffi.Struct {
+  @ffi.Int8()
+  external int field0;
+
+  @ffi.Int8()
+  external int field1;
+}
+
+final class wire_uint_8_list extends ffi.Struct {
+  external ffi.Pointer<ffi.Uint8> ptr;
+
+  @ffi.Int32()
+  external int len;
+}
+
+final class wire_EventMessage extends ffi.Struct {
+  external wire___record__i8_i8 alignment;
+
+  external ffi.Pointer<wire_uint_8_list> title;
+
+  external ffi.Pointer<wire_uint_8_list> content;
+
+  @ffi.Int32()
+  external int dialog_type;
+}
 
 typedef DartPostCObjectFnType
     = ffi.Pointer<ffi.NativeFunction<ffi.Bool Function(DartPort port_id, ffi.Pointer<ffi.Void> message)>>;

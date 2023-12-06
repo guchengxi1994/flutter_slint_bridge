@@ -3,3 +3,4 @@ mod bridge_generated; /* AUTO INJECTED BY flutter_rust_bridge. This line may not
 mod dialog;
 #[allow(dead_code)]
 mod tests;
+mod utils;

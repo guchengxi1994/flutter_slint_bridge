@@ -182,6 +182,6 @@ mod tests {
 
     #[test]
     fn auto_close_dialog_test() {
-        crate::dialog::auto_close_dialog::show_auto_close_dialog();
+        crate::dialog::auto_close_dialog::show_auto_close_dialog(None);
     }
 }

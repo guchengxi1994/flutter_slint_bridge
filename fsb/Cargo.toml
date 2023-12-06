@@ -21,3 +21,6 @@ tao = "0.22.2"
 
 [build-dependencies]
 flutter_rust_bridge_codegen = "= 1.82.3"
+
+[target.'cfg(windows)'.dependencies]
+winapi = { version = "0.3", features = ["winuser"] }

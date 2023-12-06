@@ -20,6 +20,9 @@ use std::sync::Arc;
 
 // Section: imports
 
+use crate::dialog::DialogType;
+use crate::dialog::EventMessage;
+
 // Section: wire functions
 
 fn wire_say_hello_impl(port_: MessagePort) {
@@ -42,14 +45,20 @@ fn wire_create_event_loop_impl(port_: MessagePort) {
         move || move |task_callback| Result::<_, ()>::Ok(create_event_loop()),
     )
 }
-fn wire_show_auto_close_dialog_impl(port_: MessagePort) {
+fn wire_show_auto_close_dialog_impl(
+    port_: MessagePort,
+    message: impl Wire2Api<Option<EventMessage>> + UnwindSafe,
+) {
     FLUTTER_RUST_BRIDGE_HANDLER.wrap::<_, _, _, (), _>(
         WrapInfo {
             debug_name: "show_auto_close_dialog",
             port: Some(port_),
             mode: FfiCallMode::Normal,
         },
-        move || move |task_callback| Result::<_, ()>::Ok(show_auto_close_dialog()),
+        move || {
+            let api_message = message.wire2api();
+            move |task_callback| Result::<_, ()>::Ok(show_auto_close_dialog(api_message))
+        },
     )
 }
 // Section: wrapper structs
@@ -74,6 +83,35 @@ where
         (!self.is_null()).then(|| self.wire2api())
     }
 }
+
+impl Wire2Api<DialogType> for i32 {
+    fn wire2api(self) -> DialogType {
+        match self {
+            0 => DialogType::Notification,
+            1 => DialogType::ConfirmDialog,
+            2 => DialogType::WarningDialog,
+            _ => unreachable!("Invalid variant for DialogType: {}", self),
+        }
+    }
+}
+
+impl Wire2Api<i32> for i32 {
+    fn wire2api(self) -> i32 {
+        self
+    }
+}
+impl Wire2Api<i8> for i8 {
+    fn wire2api(self) -> i8 {
+        self
+    }
+}
+
+impl Wire2Api<u8> for u8 {
+    fn wire2api(self) -> u8 {
+        self
+    }
+}
+
 // Section: impl IntoDart
 
 // Section: executor
@@ -81,13 +119,6 @@ where
 support::lazy_static! {
     pub static ref FLUTTER_RUST_BRIDGE_HANDLER: support::DefaultHandler = Default::default();
 }
-
-/// cbindgen:ignore
-#[cfg(target_family = "wasm")]
-#[path = "bridge_generated.web.rs"]
-mod web;
-#[cfg(target_family = "wasm")]
-pub use web::*;
 
 #[cfg(not(target_family = "wasm"))]
 #[path = "bridge_generated.io.rs"]

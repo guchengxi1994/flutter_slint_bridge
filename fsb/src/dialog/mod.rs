@@ -9,49 +9,165 @@ use tao::{
 };
 
 #[derive(Debug)]
-pub enum MyEvent {
-    CustomEvent(String),
+pub enum DialogType {
+    Notification,
+    ConfirmDialog,
+    WarningDialog,
+}
+
+#[derive(Debug)]
+pub struct EventMessage {
+    pub alignment: (i8, i8),
+    pub title: Option<String>,
+    pub content: Option<String>,
+    pub dialog_type: DialogType,
+    pub duration_in_sec: Option<u8>,
+}
+
+impl EventMessage {
+    pub fn default() -> Self {
+        return EventMessage {
+            alignment: (0, 0),
+            title: Some("Default Dialog".to_string()),
+            content: Some("Default content".to_string()),
+            dialog_type: DialogType::Notification,
+            duration_in_sec: Some(3),
+        };
+    }
 }
 
 lazy_static! {
-    pub static ref PROXY: RwLock<Option<tao::event_loop::EventLoopProxy<MyEvent>>> =
+    pub static ref PROXY: RwLock<Option<tao::event_loop::EventLoopProxy<EventMessage>>> =
         RwLock::new(None);
 }
 
 pub fn create_event_loop() {
-    let mut builder: EventLoopBuilder<MyEvent> = EventLoopBuilder::<MyEvent>::with_user_event();
+    let mut builder: EventLoopBuilder<EventMessage> =
+        EventLoopBuilder::<EventMessage>::with_user_event();
     #[cfg(target_os = "windows")]
     builder.with_any_thread(true);
 
-    let event_loop: EventLoop<MyEvent> = builder.build();
+    let event_loop: EventLoop<EventMessage> = builder.build();
 
     {
-        let proxy: tao::event_loop::EventLoopProxy<MyEvent> = event_loop.create_proxy();
+        let proxy: tao::event_loop::EventLoopProxy<EventMessage> = event_loop.create_proxy();
         let mut r = PROXY.write().unwrap();
         *r = Some(proxy);
     }
 
     let dialog = crate::dialog::auto_close_dialog::AutoCloseDialog::new().unwrap();
-    dialog
-        .window()
-        .set_position(slint::PhysicalPosition::new(0, 0));
 
     event_loop.run(move |_event, _, _control_flow| {
         match _event {
-            tao::event::Event::UserEvent(my_event) => match my_event {
-                MyEvent::CustomEvent(message) => {
-                    println!("Received custom event: {:?}", message);
-                    // *control_flow = ControlFlow::Exit;
+            tao::event::Event::UserEvent(my_event) => {
+                println!("Received custom event: {:?}", my_event);
+                // *control_flow = ControlFlow::Exit;
 
-                    let _dialog_handle: slint::Weak<auto_close_dialog::AutoCloseDialog> =
-                        dialog.as_weak();
-                    slint::Timer::single_shot(std::time::Duration::from_secs(3), move || {
-                        let _ = _dialog_handle.upgrade().unwrap().hide();
-                    });
+                let _dialog_handle: slint::Weak<auto_close_dialog::AutoCloseDialog> =
+                    dialog.as_weak();
 
-                    dialog.run().unwrap();
+                let (width, height) = crate::utils::get_screen_size();
+
+                if width == -1 && height == -1 {
+                    _dialog_handle
+                        .upgrade()
+                        .unwrap()
+                        .window()
+                        .set_position(slint::PhysicalPosition::new(0, 0));
+                } else {
+                    match my_event.alignment {
+                        (-1, -1) => {
+                            _dialog_handle
+                                .upgrade()
+                                .unwrap()
+                                .window()
+                                .set_position(slint::PhysicalPosition::new(0, 0));
+                        }
+                        (0, -1) => {
+                            _dialog_handle.upgrade().unwrap().window().set_position(
+                                slint::PhysicalPosition::new(
+                                    (0.5 * width as f32) as i32- /*default width*/ 100,
+                                    0,
+                                ),
+                            );
+                        }
+                        (1, -1) => {
+                            _dialog_handle.upgrade().unwrap().window().set_position(
+                                slint::PhysicalPosition::new(width- /*default width*/ 100, 0),
+                            );
+                        }
+                        (-1, 0) => {
+                            _dialog_handle.upgrade().unwrap().window().set_position(
+                                slint::PhysicalPosition::new(
+                                    0,
+                                    (0.5 * height as f32) as i32 - /*default height*/ 50,
+                                ),
+                            );
+                        }
+                        (0, 0) => {
+                            _dialog_handle.upgrade().unwrap().window().set_position(
+                                slint::PhysicalPosition::new(
+                                    (0.5 * width as f32) as i32 - /*default width*/ 100,
+                                    (0.5 * height as f32) as i32 - /*default height*/ 50,
+                                ),
+                            );
+                        }
+                        (1, 0) => {
+                            _dialog_handle.upgrade().unwrap().window().set_position(
+                                slint::PhysicalPosition::new(
+                                    width- /*default width*/ 100,
+                                    (0.5 * height as f32) as i32 - /*default height*/ 50,
+                                ),
+                            );
+                        }
+                        (-1, 1) => {
+                            _dialog_handle.upgrade().unwrap().window().set_position(
+                                slint::PhysicalPosition::new(0, height- /*default height*/ 50),
+                            );
+                        }
+                        (0, 1) => {
+                            _dialog_handle.upgrade().unwrap().window().set_position(
+                                slint::PhysicalPosition::new(
+                                    (0.5 * width as f32) as i32- /*default width*/ 100,
+                                    height- /*default height*/ 50,
+                                ),
+                            );
+                        }
+                        (1, 1) => {
+                            _dialog_handle.upgrade().unwrap().window().set_position(
+                                slint::PhysicalPosition::new(
+                                    width- /*default width*/ 100,
+                                    height- /*default height*/ 50,
+                                ),
+                            );
+                        }
+
+                        _ => {
+                            _dialog_handle
+                                .upgrade()
+                                .unwrap()
+                                .window()
+                                .set_position(slint::PhysicalPosition::new(0, 0));
+                        }
+                    }
                 }
-            },
+
+                if let Some(s) = my_event.title {
+                    _dialog_handle.upgrade().unwrap().set_window_title(s.into());
+                }
+                if let Some(s) = my_event.content {
+                    _dialog_handle.upgrade().unwrap().set_content(s.into());
+                }
+
+                slint::Timer::single_shot(
+                    std::time::Duration::from_secs(my_event.duration_in_sec.unwrap_or(3).into()),
+                    move || {
+                        let _ = _dialog_handle.upgrade().unwrap().hide();
+                    },
+                );
+
+                dialog.run().unwrap();
+            }
             _ => {}
         }
     });
