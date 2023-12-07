@@ -12,11 +12,6 @@ pub extern "C" fn wire_create_event_loop(port_: i64) {
 }
 
 #[no_mangle]
-pub extern "C" fn wire_create_tray_event_loop(port_: i64) {
-    wire_create_tray_event_loop_impl(port_)
-}
-
-#[no_mangle]
 pub extern "C" fn wire_show_notification(port_: i64, message: *mut wire_EventMessage) {
     wire_show_notification_impl(port_, message)
 }

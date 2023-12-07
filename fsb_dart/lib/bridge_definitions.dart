@@ -18,10 +18,6 @@ abstract class Fsb {
 
   FlutterRustBridgeTaskConstMeta get kCreateEventLoopConstMeta;
 
-  Future<void> createTrayEventLoop({dynamic hint});
-
-  FlutterRustBridgeTaskConstMeta get kCreateTrayEventLoopConstMeta;
-
   Future<void> showNotification({EventMessage? message, dynamic hint});
 
   FlutterRustBridgeTaskConstMeta get kShowNotificationConstMeta;

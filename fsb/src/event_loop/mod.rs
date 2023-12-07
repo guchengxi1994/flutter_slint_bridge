@@ -1,5 +1,3 @@
-pub mod tray;
-
 use slint::ComponentHandle;
 use tao::{
     event_loop::{EventLoop, EventLoopBuilder},
@@ -24,8 +22,6 @@ pub fn create_event_loop() -> anyhow::Result<()> {
         let mut r = PROXY.write().unwrap();
         *r = Some(proxy);
     }
-
-    // tray inited
 
     let notification = crate::dialog::notification::Notification::new().unwrap();
 

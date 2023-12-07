@@ -45,16 +45,6 @@ fn wire_create_event_loop_impl(port_: MessagePort) {
         move || move |task_callback| Result::<_, ()>::Ok(create_event_loop()),
     )
 }
-fn wire_create_tray_event_loop_impl(port_: MessagePort) {
-    FLUTTER_RUST_BRIDGE_HANDLER.wrap::<_, _, _, (), _>(
-        WrapInfo {
-            debug_name: "create_tray_event_loop",
-            port: Some(port_),
-            mode: FfiCallMode::Normal,
-        },
-        move || move |task_callback| Result::<_, ()>::Ok(create_tray_event_loop()),
-    )
-}
 fn wire_show_notification_impl(
     port_: MessagePort,
     message: impl Wire2Api<Option<EventMessage>> + UnwindSafe,

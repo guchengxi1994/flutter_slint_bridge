@@ -49,22 +49,6 @@ class FsbImpl implements Fsb {
         argNames: [],
       );
 
-  Future<void> createTrayEventLoop({dynamic hint}) {
-    return _platform.executeNormal(FlutterRustBridgeTask(
-      callFfi: (port_) => _platform.inner.wire_create_tray_event_loop(port_),
-      parseSuccessData: _wire2api_unit,
-      parseErrorData: null,
-      constMeta: kCreateTrayEventLoopConstMeta,
-      argValues: [],
-      hint: hint,
-    ));
-  }
-
-  FlutterRustBridgeTaskConstMeta get kCreateTrayEventLoopConstMeta => const FlutterRustBridgeTaskConstMeta(
-        debugName: "create_tray_event_loop",
-        argNames: [],
-      );
-
   Future<void> showNotification({EventMessage? message, dynamic hint}) {
     var arg0 = _platform.api2wire_opt_box_autoadd_event_message(message);
     return _platform.executeNormal(FlutterRustBridgeTask(

@@ -178,18 +178,6 @@ class FsbWire implements FlutterRustBridgeWireBase {
       _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Int64)>>('wire_create_event_loop');
   late final _wire_create_event_loop = _wire_create_event_loopPtr.asFunction<void Function(int)>();
 
-  void wire_create_tray_event_loop(
-    int port_,
-  ) {
-    return _wire_create_tray_event_loop(
-      port_,
-    );
-  }
-
-  late final _wire_create_tray_event_loopPtr =
-      _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Int64)>>('wire_create_tray_event_loop');
-  late final _wire_create_tray_event_loop = _wire_create_tray_event_loopPtr.asFunction<void Function(int)>();
-
   void wire_show_notification(
     int port_,
     ffi.Pointer<wire_EventMessage> message,

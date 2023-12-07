@@ -186,7 +186,7 @@ mod tests {
     }
 
     #[test]
-    fn test_tray() {
-        let _ = crate::event_loop::tray::create_tray_event_loop(None);
+    fn test_event_loop() {
+        let _ = crate::event_loop::create_event_loop();
     }
 }

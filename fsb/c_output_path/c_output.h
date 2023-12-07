@@ -43,8 +43,6 @@ void wire_say_hello(int64_t port_);
 
 void wire_create_event_loop(int64_t port_);
 
-void wire_create_tray_event_loop(int64_t port_);
-
 void wire_show_notification(int64_t port_, struct wire_EventMessage *message);
 
 struct wire_EventMessage *new_box_autoadd_event_message_0(void);
@@ -59,7 +57,6 @@ static int64_t dummy_method_to_enforce_bundling(void) {
     int64_t dummy_var = 0;
     dummy_var ^= ((int64_t) (void*) wire_say_hello);
     dummy_var ^= ((int64_t) (void*) wire_create_event_loop);
-    dummy_var ^= ((int64_t) (void*) wire_create_tray_event_loop);
     dummy_var ^= ((int64_t) (void*) wire_show_notification);
     dummy_var ^= ((int64_t) (void*) new_box_autoadd_event_message_0);
     dummy_var ^= ((int64_t) (void*) new_box_autoadd_u8_0);
