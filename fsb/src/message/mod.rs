@@ -2,14 +2,14 @@ use std::sync::RwLock;
 
 use lazy_static::lazy_static;
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub enum DialogType {
     Notification,
     ConfirmDialog,
     WarningDialog,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct EventMessage {
     pub alignment: (i8, i8),
     pub title: Option<String>,

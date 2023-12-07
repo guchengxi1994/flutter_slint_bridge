@@ -6,3 +6,4 @@ mod message;
 #[allow(dead_code)]
 mod tests;
 mod utils;
+mod form;

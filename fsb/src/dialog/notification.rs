@@ -1,5 +1,3 @@
-use crate::message::{EventMessage, PROXY};
-
 slint::slint! {
     import { Button , HorizontalBox, VerticalBox} from "std-widgets.slint";
     export component Notification inherits Window {
@@ -28,19 +26,6 @@ slint::slint! {
                     color: green;
                 }
             }
-        }
-    }
-}
-
-pub fn show_notification(message: Option<EventMessage>) {
-    let r = PROXY.read().unwrap();
-
-    match message {
-        Some(m) => {
-            let _ = r.clone().unwrap().send_event(m);
-        }
-        None => {
-            let _ = r.clone().unwrap().send_event(EventMessage::default());
         }
     }
 }

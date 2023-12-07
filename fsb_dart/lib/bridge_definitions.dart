@@ -18,9 +18,13 @@ abstract class Fsb {
 
   FlutterRustBridgeTaskConstMeta get kCreateEventLoopConstMeta;
 
-  Future<void> showNotification({EventMessage? message, dynamic hint});
+  Future<void> showDialog({EventMessage? message, dynamic hint});
 
-  FlutterRustBridgeTaskConstMeta get kShowNotificationConstMeta;
+  FlutterRustBridgeTaskConstMeta get kShowDialogConstMeta;
+
+  Stream<String> confirmStatusStream({dynamic hint});
+
+  FlutterRustBridgeTaskConstMeta get kConfirmStatusStreamConstMeta;
 }
 
 enum DialogType {

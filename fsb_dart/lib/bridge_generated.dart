@@ -49,27 +49,59 @@ class FsbImpl implements Fsb {
         argNames: [],
       );
 
-  Future<void> showNotification({EventMessage? message, dynamic hint}) {
+  Future<void> showDialog({EventMessage? message, dynamic hint}) {
     var arg0 = _platform.api2wire_opt_box_autoadd_event_message(message);
     return _platform.executeNormal(FlutterRustBridgeTask(
-      callFfi: (port_) => _platform.inner.wire_show_notification(port_, arg0),
+      callFfi: (port_) => _platform.inner.wire_show_dialog(port_, arg0),
       parseSuccessData: _wire2api_unit,
       parseErrorData: null,
-      constMeta: kShowNotificationConstMeta,
+      constMeta: kShowDialogConstMeta,
       argValues: [message],
       hint: hint,
     ));
   }
 
-  FlutterRustBridgeTaskConstMeta get kShowNotificationConstMeta => const FlutterRustBridgeTaskConstMeta(
-        debugName: "show_notification",
+  FlutterRustBridgeTaskConstMeta get kShowDialogConstMeta => const FlutterRustBridgeTaskConstMeta(
+        debugName: "show_dialog",
         argNames: ["message"],
+      );
+
+  Stream<String> confirmStatusStream({dynamic hint}) {
+    return _platform.executeStream(FlutterRustBridgeTask(
+      callFfi: (port_) => _platform.inner.wire_confirm_status_stream(port_),
+      parseSuccessData: _wire2api_String,
+      parseErrorData: _wire2api_FrbAnyhowException,
+      constMeta: kConfirmStatusStreamConstMeta,
+      argValues: [],
+      hint: hint,
+    ));
+  }
+
+  FlutterRustBridgeTaskConstMeta get kConfirmStatusStreamConstMeta => const FlutterRustBridgeTaskConstMeta(
+        debugName: "confirm_status_stream",
+        argNames: [],
       );
 
   void dispose() {
     _platform.dispose();
   }
 // Section: wire2api
+
+  FrbAnyhowException _wire2api_FrbAnyhowException(dynamic raw) {
+    return FrbAnyhowException(raw as String);
+  }
+
+  String _wire2api_String(dynamic raw) {
+    return raw as String;
+  }
+
+  int _wire2api_u8(dynamic raw) {
+    return raw as int;
+  }
+
+  Uint8List _wire2api_uint_8_list(dynamic raw) {
+    return raw as Uint8List;
+  }
 
   void _wire2api_unit(dynamic raw) {
     return;

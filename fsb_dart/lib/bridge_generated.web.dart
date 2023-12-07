@@ -86,7 +86,9 @@ class FsbWasmModule implements WasmModule {
 
   external dynamic /* void */ wire_create_event_loop(NativePortType port_);
 
-  external dynamic /* void */ wire_show_notification(NativePortType port_, List<dynamic>? message);
+  external dynamic /* void */ wire_show_dialog(NativePortType port_, List<dynamic>? message);
+
+  external dynamic /* void */ wire_confirm_status_stream(NativePortType port_);
 }
 
 // Section: WASM wire connector
@@ -98,6 +100,7 @@ class FsbWire extends FlutterRustBridgeWasmWireBase<FsbWasmModule> {
 
   void wire_create_event_loop(NativePortType port_) => wasmModule.wire_create_event_loop(port_);
 
-  void wire_show_notification(NativePortType port_, List<dynamic>? message) =>
-      wasmModule.wire_show_notification(port_, message);
+  void wire_show_dialog(NativePortType port_, List<dynamic>? message) => wasmModule.wire_show_dialog(port_, message);
+
+  void wire_confirm_status_stream(NativePortType port_) => wasmModule.wire_confirm_status_stream(port_);
 }

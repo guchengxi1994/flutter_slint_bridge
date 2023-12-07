@@ -182,7 +182,7 @@ mod tests {
 
     #[test]
     fn auto_close_dialog_test() {
-        crate::dialog::notification::show_notification(None);
+        crate::dialog::show_dialog(None);
     }
 
     #[test]

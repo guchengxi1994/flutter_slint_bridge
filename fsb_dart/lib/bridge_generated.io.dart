@@ -178,21 +178,31 @@ class FsbWire implements FlutterRustBridgeWireBase {
       _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Int64)>>('wire_create_event_loop');
   late final _wire_create_event_loop = _wire_create_event_loopPtr.asFunction<void Function(int)>();
 
-  void wire_show_notification(
+  void wire_show_dialog(
     int port_,
     ffi.Pointer<wire_EventMessage> message,
   ) {
-    return _wire_show_notification(
+    return _wire_show_dialog(
       port_,
       message,
     );
   }
 
-  late final _wire_show_notificationPtr =
-      _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Int64, ffi.Pointer<wire_EventMessage>)>>(
-          'wire_show_notification');
-  late final _wire_show_notification =
-      _wire_show_notificationPtr.asFunction<void Function(int, ffi.Pointer<wire_EventMessage>)>();
+  late final _wire_show_dialogPtr =
+      _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Int64, ffi.Pointer<wire_EventMessage>)>>('wire_show_dialog');
+  late final _wire_show_dialog = _wire_show_dialogPtr.asFunction<void Function(int, ffi.Pointer<wire_EventMessage>)>();
+
+  void wire_confirm_status_stream(
+    int port_,
+  ) {
+    return _wire_confirm_status_stream(
+      port_,
+    );
+  }
+
+  late final _wire_confirm_status_streamPtr =
+      _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Int64)>>('wire_confirm_status_stream');
+  late final _wire_confirm_status_stream = _wire_confirm_status_streamPtr.asFunction<void Function(int)>();
 
   ffi.Pointer<wire_EventMessage> new_box_autoadd_event_message_0() {
     return _new_box_autoadd_event_message_0();

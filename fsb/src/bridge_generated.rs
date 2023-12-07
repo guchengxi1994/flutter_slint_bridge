@@ -45,19 +45,31 @@ fn wire_create_event_loop_impl(port_: MessagePort) {
         move || move |task_callback| Result::<_, ()>::Ok(create_event_loop()),
     )
 }
-fn wire_show_notification_impl(
+fn wire_show_dialog_impl(
     port_: MessagePort,
     message: impl Wire2Api<Option<EventMessage>> + UnwindSafe,
 ) {
     FLUTTER_RUST_BRIDGE_HANDLER.wrap::<_, _, _, (), _>(
         WrapInfo {
-            debug_name: "show_notification",
+            debug_name: "show_dialog",
             port: Some(port_),
             mode: FfiCallMode::Normal,
         },
         move || {
             let api_message = message.wire2api();
-            move |task_callback| Result::<_, ()>::Ok(show_notification(api_message))
+            move |task_callback| Result::<_, ()>::Ok(show_dialog(api_message))
+        },
+    )
+}
+fn wire_confirm_status_stream_impl(port_: MessagePort) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap::<_, _, _, (), _>(
+        WrapInfo {
+            debug_name: "confirm_status_stream",
+            port: Some(port_),
+            mode: FfiCallMode::Stream,
+        },
+        move || {
+            move |task_callback| confirm_status_stream(task_callback.stream_sink::<_, String>())
         },
     )
 }
