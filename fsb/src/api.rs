@@ -5,10 +5,16 @@ pub fn say_hello() {
 }
 
 pub fn create_event_loop() {
-    let _ = crate::event_loop::create_event_loop(None);
+    let _ = crate::event_loop::create_event_loop();
 }
 
-pub fn show_auto_close_dialog(message: Option<EventMessage>) {
+pub fn create_tray_event_loop() {
+    std::thread::spawn(|| {
+        let _ = crate::event_loop::tray::create_tray_event_loop(None);
+    });
+}
+
+pub fn show_notification(message: Option<EventMessage>) {
     let rt = tokio::runtime::Runtime::new().unwrap();
 
     rt.block_on(async {

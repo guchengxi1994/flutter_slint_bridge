@@ -12,8 +12,13 @@ pub fn wire_create_event_loop(port_: MessagePort) {
 }
 
 #[wasm_bindgen]
-pub fn wire_show_auto_close_dialog(port_: MessagePort, message: JsValue) {
-    wire_show_auto_close_dialog_impl(port_, message)
+pub fn wire_create_tray_event_loop(port_: MessagePort) {
+    wire_create_tray_event_loop_impl(port_)
+}
+
+#[wasm_bindgen]
+pub fn wire_show_notification(port_: MessagePort, message: JsValue) {
+    wire_show_notification_impl(port_, message)
 }
 
 // Section: allocate functions

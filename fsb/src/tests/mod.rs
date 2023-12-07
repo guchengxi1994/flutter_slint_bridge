@@ -184,4 +184,9 @@ mod tests {
     fn auto_close_dialog_test() {
         crate::dialog::notification::show_notification(None);
     }
+
+    #[test]
+    fn test_tray() {
+        let _ = crate::event_loop::tray::create_tray_event_loop(None);
+    }
 }

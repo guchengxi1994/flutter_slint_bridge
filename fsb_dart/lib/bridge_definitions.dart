@@ -18,9 +18,13 @@ abstract class Fsb {
 
   FlutterRustBridgeTaskConstMeta get kCreateEventLoopConstMeta;
 
-  Future<void> showAutoCloseDialog({EventMessage? message, dynamic hint});
+  Future<void> createTrayEventLoop({dynamic hint});
 
-  FlutterRustBridgeTaskConstMeta get kShowAutoCloseDialogConstMeta;
+  FlutterRustBridgeTaskConstMeta get kCreateTrayEventLoopConstMeta;
+
+  Future<void> showNotification({EventMessage? message, dynamic hint});
+
+  FlutterRustBridgeTaskConstMeta get kShowNotificationConstMeta;
 }
 
 enum DialogType {

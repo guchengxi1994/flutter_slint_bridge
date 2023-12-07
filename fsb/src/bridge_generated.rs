@@ -45,19 +45,29 @@ fn wire_create_event_loop_impl(port_: MessagePort) {
         move || move |task_callback| Result::<_, ()>::Ok(create_event_loop()),
     )
 }
-fn wire_show_auto_close_dialog_impl(
+fn wire_create_tray_event_loop_impl(port_: MessagePort) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap::<_, _, _, (), _>(
+        WrapInfo {
+            debug_name: "create_tray_event_loop",
+            port: Some(port_),
+            mode: FfiCallMode::Normal,
+        },
+        move || move |task_callback| Result::<_, ()>::Ok(create_tray_event_loop()),
+    )
+}
+fn wire_show_notification_impl(
     port_: MessagePort,
     message: impl Wire2Api<Option<EventMessage>> + UnwindSafe,
 ) {
     FLUTTER_RUST_BRIDGE_HANDLER.wrap::<_, _, _, (), _>(
         WrapInfo {
-            debug_name: "show_auto_close_dialog",
+            debug_name: "show_notification",
             port: Some(port_),
             mode: FfiCallMode::Normal,
         },
         move || {
             let api_message = message.wire2api();
-            move |task_callback| Result::<_, ()>::Ok(show_auto_close_dialog(api_message))
+            move |task_callback| Result::<_, ()>::Ok(show_notification(api_message))
         },
     )
 }
@@ -119,6 +129,13 @@ impl Wire2Api<u8> for u8 {
 support::lazy_static! {
     pub static ref FLUTTER_RUST_BRIDGE_HANDLER: support::DefaultHandler = Default::default();
 }
+
+/// cbindgen:ignore
+#[cfg(target_family = "wasm")]
+#[path = "bridge_generated.web.rs"]
+mod web;
+#[cfg(target_family = "wasm")]
+pub use web::*;
 
 #[cfg(not(target_family = "wasm"))]
 #[path = "bridge_generated.io.rs"]

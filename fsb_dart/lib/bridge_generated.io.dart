@@ -178,21 +178,33 @@ class FsbWire implements FlutterRustBridgeWireBase {
       _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Int64)>>('wire_create_event_loop');
   late final _wire_create_event_loop = _wire_create_event_loopPtr.asFunction<void Function(int)>();
 
-  void wire_show_auto_close_dialog(
+  void wire_create_tray_event_loop(
+    int port_,
+  ) {
+    return _wire_create_tray_event_loop(
+      port_,
+    );
+  }
+
+  late final _wire_create_tray_event_loopPtr =
+      _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Int64)>>('wire_create_tray_event_loop');
+  late final _wire_create_tray_event_loop = _wire_create_tray_event_loopPtr.asFunction<void Function(int)>();
+
+  void wire_show_notification(
     int port_,
     ffi.Pointer<wire_EventMessage> message,
   ) {
-    return _wire_show_auto_close_dialog(
+    return _wire_show_notification(
       port_,
       message,
     );
   }
 
-  late final _wire_show_auto_close_dialogPtr =
+  late final _wire_show_notificationPtr =
       _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Int64, ffi.Pointer<wire_EventMessage>)>>(
-          'wire_show_auto_close_dialog');
-  late final _wire_show_auto_close_dialog =
-      _wire_show_auto_close_dialogPtr.asFunction<void Function(int, ffi.Pointer<wire_EventMessage>)>();
+          'wire_show_notification');
+  late final _wire_show_notification =
+      _wire_show_notificationPtr.asFunction<void Function(int, ffi.Pointer<wire_EventMessage>)>();
 
   ffi.Pointer<wire_EventMessage> new_box_autoadd_event_message_0() {
     return _new_box_autoadd_event_message_0();
