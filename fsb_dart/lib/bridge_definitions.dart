@@ -22,9 +22,9 @@ abstract class Fsb {
 
   FlutterRustBridgeTaskConstMeta get kShowDialogConstMeta;
 
-  Stream<String> confirmStatusStream({dynamic hint});
+  Stream<String> dartMessageStream({dynamic hint});
 
-  FlutterRustBridgeTaskConstMeta get kConfirmStatusStreamConstMeta;
+  FlutterRustBridgeTaskConstMeta get kDartMessageStreamConstMeta;
 
   Future<void> sendDartMessage({required String message, dynamic hint});
 

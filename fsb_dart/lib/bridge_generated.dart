@@ -66,19 +66,19 @@ class FsbImpl implements Fsb {
         argNames: ["message"],
       );
 
-  Stream<String> confirmStatusStream({dynamic hint}) {
+  Stream<String> dartMessageStream({dynamic hint}) {
     return _platform.executeStream(FlutterRustBridgeTask(
-      callFfi: (port_) => _platform.inner.wire_confirm_status_stream(port_),
+      callFfi: (port_) => _platform.inner.wire_dart_message_stream(port_),
       parseSuccessData: _wire2api_String,
       parseErrorData: _wire2api_FrbAnyhowException,
-      constMeta: kConfirmStatusStreamConstMeta,
+      constMeta: kDartMessageStreamConstMeta,
       argValues: [],
       hint: hint,
     ));
   }
 
-  FlutterRustBridgeTaskConstMeta get kConfirmStatusStreamConstMeta => const FlutterRustBridgeTaskConstMeta(
-        debugName: "confirm_status_stream",
+  FlutterRustBridgeTaskConstMeta get kDartMessageStreamConstMeta => const FlutterRustBridgeTaskConstMeta(
+        debugName: "dart_message_stream",
         argNames: [],
       );
 

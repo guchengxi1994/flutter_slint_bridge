@@ -17,8 +17,8 @@ pub extern "C" fn wire_show_dialog(port_: i64, message: *mut wire_EventMessage) 
 }
 
 #[no_mangle]
-pub extern "C" fn wire_confirm_status_stream(port_: i64) {
-    wire_confirm_status_stream_impl(port_)
+pub extern "C" fn wire_dart_message_stream(port_: i64) {
+    wire_dart_message_stream_impl(port_)
 }
 
 #[no_mangle]

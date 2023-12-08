@@ -61,16 +61,14 @@ fn wire_show_dialog_impl(
         },
     )
 }
-fn wire_confirm_status_stream_impl(port_: MessagePort) {
+fn wire_dart_message_stream_impl(port_: MessagePort) {
     FLUTTER_RUST_BRIDGE_HANDLER.wrap::<_, _, _, (), _>(
         WrapInfo {
-            debug_name: "confirm_status_stream",
+            debug_name: "dart_message_stream",
             port: Some(port_),
             mode: FfiCallMode::Stream,
         },
-        move || {
-            move |task_callback| confirm_status_stream(task_callback.stream_sink::<_, String>())
-        },
+        move || move |task_callback| dart_message_stream(task_callback.stream_sink::<_, String>()),
     )
 }
 fn wire_send_dart_message_impl(port_: MessagePort, message: impl Wire2Api<String> + UnwindSafe) {

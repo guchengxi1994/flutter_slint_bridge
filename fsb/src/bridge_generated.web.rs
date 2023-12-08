@@ -17,8 +17,8 @@ pub fn wire_show_dialog(port_: MessagePort, message: JsValue) {
 }
 
 #[wasm_bindgen]
-pub fn wire_confirm_status_stream(port_: MessagePort) {
-    wire_confirm_status_stream_impl(port_)
+pub fn wire_dart_message_stream(port_: MessagePort) {
+    wire_dart_message_stream_impl(port_)
 }
 
 #[wasm_bindgen]

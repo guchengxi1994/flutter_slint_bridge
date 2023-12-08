@@ -28,7 +28,7 @@ lazy_static! {
     pub static ref MP_SENDER: Mutex<Option<Sender<String>>> = Mutex::new(None);
 }
 
-pub static SEND_TO_DART_CONFIRM_STATUS_SINK: RwLock<Option<StreamSink<String>>> = RwLock::new(None);
+pub static SEND_TO_DART_MESSAGE_SINK: RwLock<Option<StreamSink<String>>> = RwLock::new(None);
 
 #[allow(unused_assignments)]
 pub fn create_event_loop() -> anyhow::Result<()> {
@@ -59,6 +59,42 @@ pub fn create_event_loop() -> anyhow::Result<()> {
 
     let notification = crate::dialog::notification::Notification::new().unwrap();
     let confirm = crate::dialog::confirm_dialog::ConfirmDialog::new().unwrap();
+    let pin_win = crate::form::pin_window::PinWindow::new().unwrap();
+    pin_win
+        .window()
+        .set_position(slint::LogicalPosition::new(0., 0.));
+
+    let pin_win_clone = pin_win.as_weak();
+    pin_win.on_mouse_move(move |delta_x, delta_y| {
+        let pin_win_clone = pin_win_clone.unwrap();
+        let logical_pos = pin_win_clone
+            .window()
+            .position()
+            .to_logical(pin_win_clone.window().scale_factor());
+        pin_win_clone
+            .window()
+            .set_position(slint::LogicalPosition::new(
+                logical_pos.x + delta_x,
+                logical_pos.y + delta_y,
+            ));
+    });
+
+    pin_win.on_todo_added(move |str|{
+        match SEND_TO_DART_MESSAGE_SINK.try_read() {
+            Ok(s) => match s.as_ref() {
+                Some(s0) => {
+                    let b = Rust2DartResponse::<String> { data: str.to_string() };
+                    s0.add(b.to_json());
+                }
+                None => {
+                    println!("[rust-error] Stream is None");
+                }
+            },
+            Err(_) => {
+                println!("[rust-error] Stream read error");
+            }
+        }
+    });
 
     std::thread::spawn(move || loop {
         let s = rx.recv();
@@ -75,7 +111,7 @@ pub fn create_event_loop() -> anyhow::Result<()> {
             let mut r = DIALOG_SHOW.lock().unwrap();
             *r = false;
         }
-        match SEND_TO_DART_CONFIRM_STATUS_SINK.try_read() {
+        match SEND_TO_DART_MESSAGE_SINK.try_read() {
             Ok(s) => match s.as_ref() {
                 Some(s0) => {
                     let b = Rust2DartResponse::<bool> { data: true };
@@ -158,7 +194,9 @@ pub fn create_event_loop() -> anyhow::Result<()> {
                         }
                         confirm.run().unwrap();
                     }
-                    DialogType::WarningDialog => {}
+                    DialogType::WarningDialog => {
+                        pin_win.run().unwrap();
+                    }
                 }
             }
             _ => {}
@@ -192,12 +230,12 @@ fn get_position(alignment: (i8, i8)) -> (i32, i32) {
             width- /*default width*/ 100,
             (0.5 * height as f32) as i32 - /*default height*/ 50,
         ),
-        (-1, 1) => (0, height- /*default height*/ 50),
+        (-1, 1) => (0, height- /*default height*/ 100),
         (0, 1) => (
             (0.5 * width as f32) as i32- /*default width*/ 100,
-            height- /*default height*/ 50,
+            height- /*default height*/ 100,
         ),
-        (1, 1) => (width- /*default width*/ 100, height- /*default height*/ 50),
+        (1, 1) => (width- /*default width*/ 200, height- /*default height*/ 100),
 
         _ => (0, 0),
     }

@@ -192,17 +192,17 @@ class FsbWire implements FlutterRustBridgeWireBase {
       _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Int64, ffi.Pointer<wire_EventMessage>)>>('wire_show_dialog');
   late final _wire_show_dialog = _wire_show_dialogPtr.asFunction<void Function(int, ffi.Pointer<wire_EventMessage>)>();
 
-  void wire_confirm_status_stream(
+  void wire_dart_message_stream(
     int port_,
   ) {
-    return _wire_confirm_status_stream(
+    return _wire_dart_message_stream(
       port_,
     );
   }
 
-  late final _wire_confirm_status_streamPtr =
-      _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Int64)>>('wire_confirm_status_stream');
-  late final _wire_confirm_status_stream = _wire_confirm_status_streamPtr.asFunction<void Function(int)>();
+  late final _wire_dart_message_streamPtr =
+      _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Int64)>>('wire_dart_message_stream');
+  late final _wire_dart_message_stream = _wire_dart_message_streamPtr.asFunction<void Function(int)>();
 
   void wire_send_dart_message(
     int port_,
