@@ -7,6 +7,7 @@ slint::slint! {
 
         title: root.window-title;
         no-frame: false;
+        always-on-top: true;
         width: window_width;
         height: window_height;
         icon: @image-url("icon.png");

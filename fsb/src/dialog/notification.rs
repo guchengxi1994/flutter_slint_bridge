@@ -7,6 +7,7 @@ slint::slint! {
         width: 200px;
         height: 100px;
         no-frame: true;
+        always-on-top: true;
         icon: @image-url("icon.png");
 
         in property <string> content : "Default";
