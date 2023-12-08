@@ -37,63 +37,11 @@ slint::slint! {
     }
 }
 
-fn show_dialog_x(ipc_server_name: String) -> anyhow::Result<()> {
-    let dialog = Dialog::new()?;
-    dialog
-        .window()
-        .set_position(slint::PhysicalPosition::new(0, 0));
-    let dialog_handle = dialog.as_weak();
-    dialog.on_close_dialog(move || {
-        let server_name = ipc_server_name.clone();
-        // 给主窗口返回数据
-        let tx: ipc_channel::ipc::IpcSender<IpcMessage> =
-            ipc_channel::ipc::IpcSender::connect(server_name).unwrap();
-        tx.send(IpcMessage::LabelMessage("数据更新成功!".to_string()))
-            .unwrap();
-        dialog_handle.unwrap().hide().unwrap();
-    });
-
-    dialog.run()?;
-
-    anyhow::Ok(())
-}
-
 #[allow(unused_imports)]
 mod tests {
     use crate::tests::Dialog;
     use slint::{ComponentHandle, PhysicalPosition};
     use tao::event_loop::ControlFlow;
-    #[test]
-    fn show_dialog() -> anyhow::Result<()> {
-        let (server, name): (
-            ipc_channel::ipc::IpcOneShotServer<super::IpcMessage>,
-            String,
-        ) = ipc_channel::ipc::IpcOneShotServer::new()?;
-
-        let handle = std::thread::spawn(move || {
-            let (_rx, data) = server.accept().unwrap();
-
-            loop {
-                std::thread::sleep(std::time::Duration::from_millis(50));
-                match &data {
-                    super::IpcMessage::LabelMessage(label_text) => {
-                        let label_text = label_text.to_string();
-                        println!("[rust] : {:?}", label_text);
-                        break;
-                    }
-                }
-            }
-        });
-
-        super::show_dialog_x(name)?;
-
-        match handle.join() {
-            Ok(_) => println!("New thread finished."),
-            Err(_) => println!("New thread panicked."),
-        }
-
-        anyhow::Ok(())
-    }
 
     #[test]
     fn test2() -> anyhow::Result<()> {
@@ -188,5 +136,38 @@ mod tests {
     #[test]
     fn test_event_loop() {
         let _ = crate::event_loop::create_event_loop();
+    }
+
+    // #[test]
+    // fn test_drag_window()-> anyhow::Result<()>{
+    //     let dialog = crate::form::draggable_notification::HelloWorld2::new()?;
+    //     dialog.run()?;
+    //     anyhow::Ok(())
+    // }
+
+    #[test]
+    fn test_drag_window2() -> anyhow::Result<()> {
+        let pin_win = crate::form::pin_window::PinWindow::new()?;
+        pin_win
+            .window()
+            .set_position(slint::LogicalPosition::new(0., 0.));
+
+        let pin_win_clone = pin_win.as_weak();
+        pin_win.on_mouse_move(move |delta_x, delta_y| {
+            let pin_win_clone = pin_win_clone.unwrap();
+            let logical_pos = pin_win_clone
+                .window()
+                .position()
+                .to_logical(pin_win_clone.window().scale_factor());
+            pin_win_clone
+                .window()
+                .set_position(slint::LogicalPosition::new(
+                    logical_pos.x + delta_x,
+                    logical_pos.y + delta_y,
+                ));
+        });
+
+        pin_win.run()?;
+        anyhow::Ok(())
     }
 }

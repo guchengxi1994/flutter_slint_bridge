@@ -1,1 +1,1 @@
-pub mod draggable_notification;
+pub mod pin_window;

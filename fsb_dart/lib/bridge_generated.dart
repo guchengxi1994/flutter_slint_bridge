@@ -82,6 +82,23 @@ class FsbImpl implements Fsb {
         argNames: [],
       );
 
+  Future<void> sendDartMessage({required String message, dynamic hint}) {
+    var arg0 = _platform.api2wire_String(message);
+    return _platform.executeNormal(FlutterRustBridgeTask(
+      callFfi: (port_) => _platform.inner.wire_send_dart_message(port_, arg0),
+      parseSuccessData: _wire2api_unit,
+      parseErrorData: null,
+      constMeta: kSendDartMessageConstMeta,
+      argValues: [message],
+      hint: hint,
+    ));
+  }
+
+  FlutterRustBridgeTaskConstMeta get kSendDartMessageConstMeta => const FlutterRustBridgeTaskConstMeta(
+        debugName: "send_dart_message",
+        argNames: ["message"],
+      );
+
   void dispose() {
     _platform.dispose();
   }

@@ -25,6 +25,10 @@ abstract class Fsb {
   Stream<String> confirmStatusStream({dynamic hint});
 
   FlutterRustBridgeTaskConstMeta get kConfirmStatusStreamConstMeta;
+
+  Future<void> sendDartMessage({required String message, dynamic hint});
+
+  FlutterRustBridgeTaskConstMeta get kSendDartMessageConstMeta;
 }
 
 enum DialogType {

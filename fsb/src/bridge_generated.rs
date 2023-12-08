@@ -73,6 +73,19 @@ fn wire_confirm_status_stream_impl(port_: MessagePort) {
         },
     )
 }
+fn wire_send_dart_message_impl(port_: MessagePort, message: impl Wire2Api<String> + UnwindSafe) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap::<_, _, _, (), _>(
+        WrapInfo {
+            debug_name: "send_dart_message",
+            port: Some(port_),
+            mode: FfiCallMode::Normal,
+        },
+        move || {
+            let api_message = message.wire2api();
+            move |task_callback| Result::<_, ()>::Ok(send_dart_message(api_message))
+        },
+    )
+}
 // Section: wrapper structs
 
 // Section: static checks

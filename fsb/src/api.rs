@@ -19,3 +19,13 @@ pub fn confirm_status_stream(s: StreamSink<String>) -> anyhow::Result<()> {
     *stream = Some(s);
     anyhow::Ok(())
 }
+
+pub fn send_dart_message(message: String) {
+    let r = crate::event_loop::send_dart_message(message);
+    match r {
+        Ok(_) => {}
+        Err(e) => {
+            println!("[rust] error :{:?}", e);
+        }
+    }
+}

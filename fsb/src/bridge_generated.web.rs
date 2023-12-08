@@ -21,6 +21,11 @@ pub fn wire_confirm_status_stream(port_: MessagePort) {
     wire_confirm_status_stream_impl(port_)
 }
 
+#[wasm_bindgen]
+pub fn wire_send_dart_message(port_: MessagePort, message: String) {
+    wire_send_dart_message_impl(port_, message)
+}
+
 // Section: allocate functions
 
 // Section: related functions

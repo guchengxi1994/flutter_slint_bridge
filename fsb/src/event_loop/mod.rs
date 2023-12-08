@@ -1,4 +1,9 @@
-use std::sync::{Mutex, RwLock};
+pub mod model;
+
+use std::{
+    sync::{mpsc::Sender, Mutex, RwLock},
+    time::Duration,
+};
 
 use flutter_rust_bridge::StreamSink;
 use slint::ComponentHandle;
@@ -14,12 +19,18 @@ use crate::{
 
 use lazy_static::lazy_static;
 
+use self::model::Rust2DartResponse;
+
+use std::sync::mpsc::channel;
+
 lazy_static! {
     static ref DIALOG_SHOW: Mutex<bool> = Mutex::new(false);
+    pub static ref MP_SENDER: Mutex<Option<Sender<String>>> = Mutex::new(None);
 }
 
 pub static SEND_TO_DART_CONFIRM_STATUS_SINK: RwLock<Option<StreamSink<String>>> = RwLock::new(None);
 
+#[allow(unused_assignments)]
 pub fn create_event_loop() -> anyhow::Result<()> {
     let mut builder: EventLoopBuilder<EventMessage> =
         EventLoopBuilder::<EventMessage>::with_user_event();
@@ -28,14 +39,36 @@ pub fn create_event_loop() -> anyhow::Result<()> {
 
     let event_loop: EventLoop<EventMessage> = builder.build();
 
+    let (_tx, rx) = channel::<String>();
+
+    {
+        let mut r = MP_SENDER.lock().unwrap();
+        *r = Some(_tx.clone());
+    }
+
     {
         let proxy: tao::event_loop::EventLoopProxy<EventMessage> = event_loop.create_proxy();
         let mut r = PROXY.write().unwrap();
         *r = Some(proxy);
     }
 
+    std::thread::spawn(move || loop {
+        let _ = _tx.clone().send("avoid drop reciever".to_owned());
+        std::thread::sleep(Duration::from_secs(1));
+    });
+
     let notification = crate::dialog::notification::Notification::new().unwrap();
     let confirm = crate::dialog::confirm_dialog::ConfirmDialog::new().unwrap();
+
+    std::thread::spawn(move || loop {
+        let s = rx.recv();
+        if let Ok(_s) = s {
+            if _s == "aaaaa" {
+                crate::dialog::show_dialog(None);
+            }
+        }
+        std::thread::sleep(Duration::from_millis(50));
+    });
 
     confirm.on_close_dialog(|| {
         {
@@ -45,7 +78,8 @@ pub fn create_event_loop() -> anyhow::Result<()> {
         match SEND_TO_DART_CONFIRM_STATUS_SINK.try_read() {
             Ok(s) => match s.as_ref() {
                 Some(s0) => {
-                    s0.add("aaaa".to_string());
+                    let b = Rust2DartResponse::<bool> { data: true };
+                    s0.add(b.to_json());
                 }
                 None => {
                     println!("[rust-error] Stream is None");
@@ -167,4 +201,10 @@ fn get_position(alignment: (i8, i8)) -> (i32, i32) {
 
         _ => (0, 0),
     }
+}
+
+pub fn send_dart_message(message: String) -> anyhow::Result<()> {
+    let r = MP_SENDER.lock().unwrap();
+    (*r).clone().unwrap().send(message)?;
+    anyhow::Ok(())
 }

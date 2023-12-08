@@ -21,6 +21,11 @@ pub extern "C" fn wire_confirm_status_stream(port_: i64) {
     wire_confirm_status_stream_impl(port_)
 }
 
+#[no_mangle]
+pub extern "C" fn wire_send_dart_message(port_: i64, message: *mut wire_uint_8_list) {
+    wire_send_dart_message_impl(port_, message)
+}
+
 // Section: allocate functions
 
 #[no_mangle]
