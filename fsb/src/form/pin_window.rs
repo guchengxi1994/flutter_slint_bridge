@@ -4,6 +4,7 @@ import { VerticalBox , HorizontalBox,StandardButton,LineEdit, Button,ListView,Ch
 export struct ListViewItem  {
     title: string,
     checked: bool,
+    id:int
 }
 
 
@@ -17,56 +18,29 @@ export component PinWindow inherits Window {
         property <length> radius: 100px;
         in property <string> title_name : "Default";
 
-
         in property <[ListViewItem]> todo-model: [
-        { title: "Implement the .slint file", checked: true },
-        { title: "Do the Rust part", checked: false },
-        { title: "Make the C++ code", checked: false },
-        { title: "Write some JavaScript code", checked: false },
-        { title: "Test the application", checked: false },
-        { title: "Ship to customer", checked: false },
-        { title: "???", checked: false },
-        { title: "Profit", checked: false },
+        // { title: "Implement the .slint file", checked: true },
+        // { title: "Do the Rust part", checked: false },
+        // { title: "Make the C++ code", checked: false },
+        // { title: "Write some JavaScript code", checked: false },
+        // { title: "Test the application", checked: false },
+        // { title: "Ship to customer", checked: false },
+        // { title: "???", checked: false },
+        // { title: "Profit", checked: false },
     ];
 
-        in property <bool> show-header: false;
+
+        property <string> operation_str : "显示操作";
         in-out property <bool> is-sort-by-name: false;
         in-out property <bool> hide-done-items: false;
 
         callback todo-added(string);
-        callback remove-done();
-        callback popup_confirmed;
-        callback show_confirm_popup;
+        callback re-sync();
         callback apply_sorting_and_filtering();
-
-        show_confirm_popup => { confirm_popup.show(); }
+        callback item-status-changed(bool,int);
 
         preferred-width: 400px;
         preferred-height: 600px;
-
-        confirm_popup := PopupWindow {
-            x: 40px;
-            y: 100px;
-            width: min(confirm_popup_layout.preferred-width, root.width - 80px);
-
-            Rectangle {
-                background: root.background;
-                border-color: confirm_popup_text.color;
-                border-width: 1px;
-            }
-
-            confirm_popup_layout := Dialog {
-                height:100%; width: 100%;
-
-                confirm_popup_text := Text {
-                    text: "Some items are not done, are you sure you wish to quit?";
-                    wrap: word-wrap;
-                }
-
-                StandardButton { kind: yes; clicked => { root.popup_confirmed(); } }
-                StandardButton { kind: no; }
-            }
-        }
 
 
         callback mouse_move(length, length);
@@ -90,6 +64,8 @@ export component PinWindow inherits Window {
                 radius:4px;
             }
         ]
+        property <bool> show-header: false;
+
 
         TouchArea {
             moved => {
@@ -158,7 +134,7 @@ export component PinWindow inherits Window {
                                 self.text = "";
                             }
 
-                            placeholder-text: "What needs to be done?";
+                            placeholder-text: "添加新条目";
                         }
 
                         btn := Button {
@@ -167,7 +143,7 @@ export component PinWindow inherits Window {
                                 text-edit.text = "";
                             }
 
-                            text: "Add New Entry";
+                            text: "添加";
                             enabled: text-edit.text != "";
                         }
                     }
@@ -200,6 +176,7 @@ export component PinWindow inherits Window {
                             CheckBox {
                                 toggled => {
                                     todo.checked = self.checked;
+                                    item-status-changed(todo.checked,todo.id)
                                 }
 
                                 text: todo.title;
@@ -212,9 +189,21 @@ export component PinWindow inherits Window {
                         alignment: end;
 
                         Button {
-                            clicked => { root.remove-done(); }
+                            text: root.operation_str;
+                            clicked => {
+                                root.show-header = !root.show-header;
+                                if (show-header){
+                                    root.operation_str = "隐藏操作"
+                                }else{
+                                    root.operation_str = "显示操作"
+                                }
+                             }
+                        }
 
-                            text: "Remove Done Items";
+                        Button {
+                            clicked => { root.re-sync(); }
+
+                            text: "重新同步数据";
                         }
                     }
                 }

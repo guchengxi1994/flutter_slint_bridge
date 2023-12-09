@@ -170,4 +170,14 @@ mod tests {
         pin_win.run()?;
         anyhow::Ok(())
     }
+
+    #[test]
+    fn test_drag_window3() -> anyhow::Result<()> {
+        let mut pin_win = crate::form::pin_window::PinWindow::new()?;
+
+        pin_win = crate::event_loop::pin_window_wrapper::pin_window_wrapper(pin_win);
+
+        pin_win.run()?;
+        anyhow::Ok(())
+    }
 }

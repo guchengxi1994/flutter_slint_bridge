@@ -21,7 +21,7 @@ pub fn dart_message_stream(s: StreamSink<String>) -> anyhow::Result<()> {
 }
 
 pub fn send_dart_message(message: String) {
-    let r = crate::event_loop::send_dart_message(message);
+    let r = crate::event_loop::utils::send_dart_message(message);
     match r {
         Ok(_) => {}
         Err(e) => {

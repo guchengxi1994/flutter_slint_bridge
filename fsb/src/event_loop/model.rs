@@ -21,3 +21,10 @@ where
 pub enum IpcMessage {
     DartMessage(String),
 }
+
+#[derive(Serialize, Deserialize, Debug, Clone)]
+pub struct PinWindowItem {
+    pub title: String,
+    pub checked: bool,
+    pub id: i32,
+}
