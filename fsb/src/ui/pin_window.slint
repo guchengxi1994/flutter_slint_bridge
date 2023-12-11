@@ -1,12 +1,12 @@
-slint::slint! {
+
 import { VerticalBox , HorizontalBox,StandardButton,LineEdit, Button,ListView,CheckBox} from "std-widgets.slint";
+import { ListViewItem,DefaultItemView } from "default_listview_item.slint";
 
-export struct ListViewItem  {
-    title: string,
-    checked: bool,
-    id:int
-}
-
+// export struct ListViewItem  {
+//     title: string,
+//     checked: bool,
+//     id:int
+// }
 
 export component PinWindow inherits Window {
         property <bool> active: false;
@@ -172,15 +172,11 @@ export component PinWindow inherits Window {
                     }
 
                     list-view := ListView {
-                        for todo in root.todo-model:  HorizontalLayout {
-                            CheckBox {
-                                toggled => {
-                                    todo.checked = self.checked;
-                                    item-status-changed(todo.checked,todo.id)
-                                }
-
-                                text: todo.title;
-                                checked: todo.checked;
+                        for todo in root.todo-model:  DefaultItemView {
+                            todo: todo;
+                            item-status-changed => {
+                                todo.checked = !todo.checked;
+                                item-status-changed(todo.checked,todo.id)
                             }
                         }
                     }
@@ -212,4 +208,4 @@ export component PinWindow inherits Window {
         }
     }
 
-}
+

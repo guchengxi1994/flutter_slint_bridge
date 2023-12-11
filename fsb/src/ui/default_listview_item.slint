@@ -1,0 +1,24 @@
+import { CheckBox } from "std-widgets.slint";
+
+export struct ListViewItem  {
+    title: string,
+    checked: bool,
+    id:int
+}
+
+export component DefaultItemView inherits HorizontalLayout{
+
+    callback item-status-changed(bool,int);
+
+    in property <ListViewItem> todo: { title: "", checked: false };
+
+    CheckBox {
+        toggled => {
+            // todo.checked = self.checked;
+            item-status-changed(todo.checked,todo.id)
+        }
+
+        text: todo.title;
+        checked: todo.checked;
+    }
+}

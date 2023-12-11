@@ -2,6 +2,7 @@ pub mod model;
 pub mod pin_window_wrapper;
 pub mod utils;
 
+use crate::ui::PinWindow;
 use std::{
     sync::{mpsc::Sender, Mutex, RwLock},
     time::Duration,
@@ -64,7 +65,7 @@ pub fn create_event_loop() -> anyhow::Result<()> {
 
     let notification = crate::dialog::notification::Notification::new().unwrap();
     let confirm = crate::dialog::confirm_dialog::ConfirmDialog::new().unwrap();
-    let mut pin_win = crate::form::pin_window::PinWindow::new().unwrap();
+    let mut pin_win = PinWindow::new().unwrap();
 
     pin_win = pin_window_wrapper(pin_win);
 

@@ -1,7 +1,7 @@
 use std::rc::Rc;
 
-use crate::form::pin_window::ListViewItem;
-use crate::form::pin_window::PinWindow;
+use crate::ui::ListViewItem;
+use crate::ui::PinWindow;
 use slint::ComponentHandle;
 use slint::Model;
 
@@ -43,7 +43,7 @@ pub fn pin_window_wrapper(pin_win: PinWindow) -> PinWindow {
             }
             println!("length : {:?}", items.len());
             loop {
-                if todo_model.row_count()==0{
+                if todo_model.row_count() == 0 {
                     break;
                 }
                 todo_model.remove(0);

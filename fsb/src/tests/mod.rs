@@ -43,6 +43,8 @@ mod tests {
     use slint::{ComponentHandle, PhysicalPosition};
     use tao::event_loop::ControlFlow;
 
+    // slint::include_modules!();
+
     #[test]
     fn test2() -> anyhow::Result<()> {
         slint::slint! {
@@ -147,7 +149,7 @@ mod tests {
 
     #[test]
     fn test_drag_window2() -> anyhow::Result<()> {
-        let pin_win = crate::form::pin_window::PinWindow::new()?;
+        let pin_win = crate::ui::PinWindow::new()?;
         pin_win
             .window()
             .set_position(slint::LogicalPosition::new(0., 0.));
@@ -173,7 +175,7 @@ mod tests {
 
     #[test]
     fn test_drag_window3() -> anyhow::Result<()> {
-        let mut pin_win = crate::form::pin_window::PinWindow::new()?;
+        let mut pin_win = crate::ui::PinWindow::new()?;
 
         pin_win = crate::event_loop::pin_window_wrapper::pin_window_wrapper(pin_win);
 

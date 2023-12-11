@@ -6,6 +6,8 @@ use lib_flutter_rust_bridge_codegen::{
 const RUST_INPUT: &str = "src/api.rs";
 
 fn main() {
+    slint_build::compile("src/ui/pin_window.slint").unwrap();
+
     init_logger("./logs/", true).unwrap();
 
     // Tell Cargo that if the input Rust code changes, to rerun this build script.
