@@ -1,0 +1,104 @@
+import { ListView , Button} from "std-widgets.slint";
+
+export component DropdownItem inherits HorizontalLayout {
+    in property <string> item_title;
+    callback on_tap();
+    Rectangle {
+        width: 100px;
+        height: 30px;
+        border-radius: 4px;
+        background: on-hover ? rgba(0,0,0,0.2): transparent;
+
+        property <bool> on-hover:false;
+
+        
+        
+        ta := TouchArea {
+            HorizontalLayout {
+                alignment: start;
+                padding-left: 10px;
+                VerticalLayout {
+                    alignment: center;
+                    Text {
+                        text: item-title;
+                    }
+                }
+                
+            }
+            
+            clicked => {
+                on-tap()
+            }
+        }
+
+        states [
+            active when ta.has-hover:{
+                on-hover:true;
+            }
+            inactive when !ta.has-hover:{
+                on-hover:false;
+            }
+        ]
+    }
+}
+
+export component Dropdown inherits Rectangle {
+    in property <[string]> items:[];
+    height: items.length*30px<200px?items.length*30px:200px;
+    width: 100px;
+    border-width: 2px;
+    border-color: rgba(0, 0, 0, 0.2);
+    background: white;
+    border-radius: 4px;
+    drop-shadow-offset-x: 5px;
+    drop-shadow-offset-y: 5px;
+    drop-shadow-color: rgba(0, 0, 0, 0.2);
+    drop-shadow-blur: 10px;
+
+    callback on_tap(string);
+
+    list-view := ListView {
+        for item in items:  DropdownItem {
+            item-title: item;
+            on-tap => {
+                on-tap(item)
+            }
+        }
+    }
+}
+
+// DEMO for preview
+// should not be used
+export component DropdownDemo {
+    Dropdown{
+        items: ["a","b","c","d"];
+    }
+}
+
+// DEMO for preview
+// should not be used
+export component DropdownDemo2 {
+    callback show_popup;
+
+    Button {
+        text: "click";
+        clicked => {
+            popup.show();
+        }
+    }
+
+    // show_popup => { popup.show(); }
+
+    popup := PopupWindow{
+        layout := Dialog{
+            height: 100%;
+            width: 100%;
+            Dropdown{
+                items: ["a","b","c","d","a","b","c","d","a","b","c","d","a","b","c","d"];
+            }
+        }
+       
+    }
+
+    
+}

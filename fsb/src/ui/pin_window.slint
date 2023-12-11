@@ -10,6 +10,7 @@ import { ListViewItem,DefaultItemView } from "default_listview_item.slint";
 
 export component PinWindow inherits Window {
         property <bool> active: false;
+
         no-frame: true;
         always-on-top: true;
         background: transparent;
@@ -50,6 +51,9 @@ export component PinWindow inherits Window {
             width: dynamic_width;
             height: dynamic_height;
             background: @linear-gradient (90deg, #cde4ee 0%, #ebf8e1 100%);
+            animate width,height {
+                duration: 200ms; easing: ease-in;
+            }
         }
 
         states [
@@ -79,6 +83,7 @@ export component PinWindow inherits Window {
             clicked => {
                 if (!root.active){
                     root.active = !root.active;
+                    
                 }
                 // root.active = !root.active;
             }
