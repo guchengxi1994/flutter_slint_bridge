@@ -1,5 +1,6 @@
 use crate::message::{EventMessage, PROXY};
 
+pub mod about_dialog;
 pub mod confirm_dialog;
 pub mod notification;
 pub mod warning_dialog;

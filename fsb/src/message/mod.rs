@@ -7,6 +7,7 @@ pub enum DialogType {
     Notification,
     ConfirmDialog,
     WarningDialog,
+    AboutDialog,
 }
 
 #[derive(Debug, Clone)]

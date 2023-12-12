@@ -2,7 +2,7 @@ pub mod model;
 pub mod pin_window_wrapper;
 pub mod utils;
 
-use crate::ui::PinWindow;
+use crate::{dialog::about_dialog, ui::PinWindow};
 use std::{
     sync::{mpsc::Sender, Mutex, RwLock},
     time::Duration,
@@ -14,6 +14,7 @@ use tao::{
     event_loop::{EventLoop, EventLoopBuilder},
     platform::windows::EventLoopBuilderExtWindows,
 };
+use tray_item::{IconSource, TrayItem};
 
 use crate::{
     dialog::notification,
@@ -43,9 +44,26 @@ pub fn create_event_loop() -> anyhow::Result<()> {
     #[cfg(target_os = "windows")]
     builder.with_any_thread(true);
 
+    let mut tray = TrayItem::new("Weaving", IconSource::Resource("name-of-icon-in-rc-file"))?;
+
+    // tray.add_label("Tray Label").unwrap();
+
     let event_loop: EventLoop<EventMessage> = builder.build();
 
     let (_tx, rx) = channel::<String>();
+
+    let about_tx = _tx.clone();
+    tray.add_menu_item("关于", move || {
+        about_tx.send("navigate".to_owned()).unwrap();
+    })
+    .unwrap();
+    tray.inner_mut().add_separator().unwrap();
+
+    let quit_tx = _tx.clone();
+    tray.add_menu_item("Quit", move || {
+        quit_tx.send("quit".to_owned()).unwrap();
+    })
+    .unwrap();
 
     {
         let mut r = MP_SENDER.lock().unwrap();
@@ -72,8 +90,27 @@ pub fn create_event_loop() -> anyhow::Result<()> {
     std::thread::spawn(move || loop {
         let s = rx.recv();
         if let Ok(_s) = s {
-            if _s == "aaaaa" {
-                crate::dialog::show_dialog(None);
+            if _s == "navigate" {
+                crate::dialog::show_dialog(Some(EventMessage {
+                    alignment: (0, 0),
+                    title: None,
+                    content: None,
+                    dialog_type: DialogType::AboutDialog,
+                    duration_in_sec: None,
+                }));
+            }
+            if _s == "quit" {
+                crate::dialog::show_dialog(Some(EventMessage {
+                    alignment: (0, 0),
+                    title: Some("".to_owned()),
+                    content: Some("Quit...".to_string()),
+                    dialog_type: DialogType::Notification,
+                    duration_in_sec: None,
+                }));
+                std::thread::spawn(|| {
+                    std::thread::sleep(Duration::from_secs(3));
+                    std::process::exit(0);
+                });
             }
         }
         std::thread::sleep(Duration::from_millis(50));
@@ -101,6 +138,15 @@ pub fn create_event_loop() -> anyhow::Result<()> {
             }
         }
         let _ = confirm_dialog_handle.upgrade().unwrap().hide();
+    });
+
+    let about = about_dialog::AboutDialog::new()?;
+
+    let about_dialog_handle = about.as_weak();
+
+    about.on_navigate(move || {
+        let _ = open::that("https://github.com/guchengxi1994");
+        let _ = about_dialog_handle.upgrade().unwrap().hide();
     });
 
     event_loop.run(move |_event, _, _control_flow| {
@@ -172,6 +218,9 @@ pub fn create_event_loop() -> anyhow::Result<()> {
                     }
                     DialogType::WarningDialog => {
                         pin_win.run().unwrap();
+                    }
+                    DialogType::AboutDialog => {
+                        about.run().unwrap();
                     }
                 }
             }
