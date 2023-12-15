@@ -1,0 +1,66 @@
+import { VerticalBox,HorizontalBox,Button } from "std-widgets.slint";
+export component DefaultLoading inherits HorizontalLayout {
+    width: 50px;
+    height: 50px;
+    alignment: center;
+    property <length> h1:20px;
+    property <length> h2:35px;
+    property <length> h3:50px;
+
+
+    VerticalLayout {
+        alignment: center;
+        Rectangle {
+            background: red;
+            width: 5px;
+            height: h1;
+        }
+    }
+    Rectangle {
+        width: 10px;
+    }
+    VerticalLayout {
+        alignment: center;
+        Rectangle {
+            background: green;
+            width: 5px;
+            height: h2;
+        }
+    }
+    Rectangle {
+        width: 10px;
+    }
+    VerticalLayout {
+        alignment: center;
+        Rectangle {
+            background: blue;
+            width: 5px;
+            height: h3;
+        }
+    }
+   
+    animate h1,h3 {
+        duration: 350ms;
+        iteration-count: -1;
+    }
+    animate h2 {
+        duration: 300ms;
+        iteration-count: -1;
+    }
+    init => {
+        h1 = 50px;
+        h3 = 20px;
+        h2 = 15px;
+    }
+  
+}
+
+
+export component Circle inherits Rectangle {
+    width: 30px;
+    height: 30px;
+    border-radius: root.width / 2;
+    animate x { duration: 250ms; easing: ease-in;}
+    animate y { duration: 250ms; easing: ease-in-out; }
+    animate background { duration: 250ms; }
+}

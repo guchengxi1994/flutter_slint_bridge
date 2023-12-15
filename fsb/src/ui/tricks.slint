@@ -1,0 +1,16 @@
+export component Star inherits Rectangle {
+    preferred-width: 100px;
+    preferred-height: 100px;
+    path := Path {
+        preferred-width: 50px;
+        preferred-height: 50px;
+        commands: "M 25 0 L 31 17 L 50 17 L 34 26 L 39 50 L 25 35 L 11 50 L 16 26 L 0 17  L 19 17 Z";
+
+        stroke: black;
+        fill: area.pressed ? blue : red;
+        animate fill {
+            duration: 250ms;
+        }
+    }
+    area := TouchArea {}
+}

@@ -2,12 +2,6 @@
 import { VerticalBox , HorizontalBox,StandardButton,LineEdit, Button,ListView,CheckBox} from "std-widgets.slint";
 import { ListViewItem,DefaultItemView } from "default_listview_item.slint";
 
-// export struct ListViewItem  {
-//     title: string,
-//     checked: bool,
-//     id:int
-// }
-
 export component PinWindow inherits Window {
         property <bool> active: false;
 
@@ -19,16 +13,7 @@ export component PinWindow inherits Window {
         property <length> radius: 100px;
         in property <string> title_name : "Default";
 
-        in property <[ListViewItem]> todo-model: [
-        // { title: "Implement the .slint file", checked: true },
-        // { title: "Do the Rust part", checked: false },
-        // { title: "Make the C++ code", checked: false },
-        // { title: "Write some JavaScript code", checked: false },
-        // { title: "Test the application", checked: false },
-        // { title: "Ship to customer", checked: false },
-        // { title: "???", checked: false },
-        // { title: "Profit", checked: false },
-    ];
+        in property <[ListViewItem]> todo-model: [];
 
 
         property <string> operation_str : "显示操作";
