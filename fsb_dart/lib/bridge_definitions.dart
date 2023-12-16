@@ -35,6 +35,7 @@ enum DialogType {
   notification,
   confirmDialog,
   warningDialog,
+  aboutDialog,
 }
 
 class EventMessage {

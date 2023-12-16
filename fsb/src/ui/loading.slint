@@ -55,12 +55,35 @@ export component DefaultLoading inherits HorizontalLayout {
   
 }
 
+// copied from https://github.com/slint-ui/slint/issues/902
+export component CustomSpinner inherits Rectangle {
+    width: 100px;
+    height: 100px;
 
-export component Circle inherits Rectangle {
-    width: 30px;
-    height: 30px;
-    border-radius: root.width / 2;
-    animate x { duration: 250ms; easing: ease-in;}
-    animate y { duration: 250ms; easing: ease-in-out; }
-    animate background { duration: 250ms; }
+    for idx in 20 : Rectangle {
+        width: min(root.height, root.width) * 0.1;
+        height: self.width;
+        background: gray;
+        border-radius: self.width/2;
+
+        x: parent.width * (0.5 +  Math.sin(1turn * (idx/20 + animation-tick()/5s)) * 0.4) - self.width/2;
+        y: parent.height * (0.5 +  Math.cos(1turn * (idx/20 + animation-tick()/5s)) * 0.4) - self.height/2;
+    }
+}
+
+
+
+// copied from https://github.com/slint-ui/slint/issues/902
+export component CustomProgressBar inherits Rectangle {
+    width: 100px;
+    height: 20px;
+
+    property <color> col1 : #2320db;
+    property <color> col2 : #4fa4dd;
+
+    property <float> animated : Math.mod(animation-tick()/2s, 1);
+    background: animated < 0.25 ? @linear-gradient(90deg, col1 0%, col1 animated*4, col2 100%)
+                : animated < 0.5  ? @linear-gradient(90deg, col2 0%, col1 animated*4 - 1, col1 100%)
+                : animated < 0.75 ? @linear-gradient(90deg, col2 0%, col2 animated*4 - 2, col1 100%)
+                :                   @linear-gradient(90deg, col1 0%, col2 animated*4 - 3, col2 100%);
 }

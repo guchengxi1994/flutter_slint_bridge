@@ -1,16 +1,181 @@
+import { HorizontalBox } from "std-widgets.slint";
 export component Star inherits Rectangle {
     preferred-width: 100px;
     preferred-height: 100px;
+    in property <bool> status : false;
     path := Path {
         preferred-width: 50px;
         preferred-height: 50px;
         commands: "M 25 0 L 31 17 L 50 17 L 34 26 L 39 50 L 25 35 L 11 50 L 16 26 L 0 17  L 19 17 Z";
 
         stroke: black;
-        fill: area.pressed ? blue : red;
+        fill: false ? red : area.pressed ? blue : red;
         animate fill {
             duration: 250ms;
         }
     }
     area := TouchArea {}
 }
+
+// export component Taichi inherits Rectangle {
+//     in property <length> size:100px;
+
+//     width: size;
+//     height: size;
+
+//     border-color: black;
+//     background: white;
+//     border-radius: size/2;
+//     border-width: 1px;
+
+//     VerticalLayout {
+//         HorizontalLayout {
+//             Rectangle {
+//                 width: 0.25*size;
+//             }
+    
+//             Rectangle {
+//                 width: 0.5*size;
+//                 height: 0.5*size;
+//                 border-width: 1px;
+//                 border-radius: size/4;
+//                 background: black;
+//             }
+//         }
+//         HorizontalLayout {
+//             Rectangle {
+//                 width: 0.25*size;
+//             }
+    
+//             Rectangle {
+//                 width: 0.5*size;
+//                 height: 0.5*size;
+//                 border-width: 1px;
+//                 border-radius: size/4;
+//                 background: white;
+//                 border-color: black;
+//             }
+//         }
+//     }
+
+    
+// }
+
+export component TaichiLeft inherits Path {
+    in property <float> size:100;
+
+    width: 0.75*size*1px;
+    height: size*1px;
+
+    stroke: black;
+    stroke-width: 1px;
+    fill: white;
+
+    MoveTo{
+        x:0.5*size;
+        y:0;
+    }
+    ArcTo {
+        radius-x: 1;
+        radius-y: 1;
+        x: 0.5*size;
+        y: size;
+    }
+
+    ArcTo {
+        radius-x: 1;
+        radius-y: 1;
+        x: 0.5*size;
+        y: 0.5*size;
+    }
+
+    ArcTo {
+        sweep: true;
+        radius-x: 1;
+        radius-y: 1;
+        x: 0.5*size;
+        y: 0;
+    }
+
+    // Close{}
+}
+
+export component TaichiRight inherits Path {
+    in property <float> size:100;
+
+    width: 0.75*size*1px;
+    height: size*1px;
+
+    stroke: black;
+    stroke-width: 1px;
+    fill: black;
+
+    MoveTo{
+        x:0.5*size;
+        y:0;
+    }
+    ArcTo {
+        sweep: true;
+        radius-x: 1;
+        radius-y: 1;
+        x: 0.5*size;
+        y: size;
+    }
+
+    ArcTo {
+        radius-x: 1;
+        radius-y: 1;
+        x: 0.5*size;
+        y: 0.5*size;
+    }
+
+    ArcTo {
+        sweep: true;
+        radius-x: 1;
+        radius-y: 1;
+        x: 0.5*size;
+        y: 0;
+    }
+    // Close{}
+}
+
+export component Taichi inherits Rectangle {
+    in property <float> size:100;
+
+    width: size*1px;
+    height: size*1px;
+        Rectangle {
+            x: 0;
+            l:=  TaichiLeft{size: size;}
+        }
+        
+        Rectangle {
+            x: 0.25*self.width;
+            r := TaichiRight{size: size;}
+        }  
+
+        Rectangle {
+            width: 0.25*size*1px;
+            height: 0.25*size*1px;
+            border-radius: 0.125*size*1px;
+            background: black;
+            x: 0.5*size*1px;
+            y: 0.625*size*1px;
+        }
+
+        Rectangle {
+            width: 0.25*size*1px;
+            height: 0.25*size*1px;
+            border-radius: 0.125*size*1px;
+            background: white;
+            x: 0.5*size*1px;
+            y: 0.125*size*1px;
+        }
+}
+
+// demo for Taichi
+export component TaichiDemo inherits Rectangle {
+
+    t:= Taichi{}
+}
+
