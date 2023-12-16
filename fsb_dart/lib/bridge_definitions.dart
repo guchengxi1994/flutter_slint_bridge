@@ -36,6 +36,7 @@ enum DialogType {
   confirmDialog,
   warningDialog,
   aboutDialog,
+  subWindow,
 }
 
 class EventMessage {

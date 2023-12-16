@@ -7,7 +7,13 @@ pub fn say_hello() {
 }
 
 pub fn create_event_loop() {
-    let _ = crate::event_loop::create_event_loop();
+    let r = crate::event_loop::create_event_loop();
+    match r {
+        Ok(_) => {}
+        Err(e) => {
+            println!("[rust] error {:?}", e)
+        }
+    }
 }
 
 pub fn show_dialog(message: Option<EventMessage>) {

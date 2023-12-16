@@ -8,6 +8,7 @@ pub enum DialogType {
     ConfirmDialog,
     WarningDialog,
     AboutDialog,
+    SubWindow,
 }
 
 #[derive(Debug, Clone)]

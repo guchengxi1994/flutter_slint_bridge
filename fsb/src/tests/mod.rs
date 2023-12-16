@@ -137,7 +137,13 @@ mod tests {
 
     #[test]
     fn test_event_loop() {
-        let _ = crate::event_loop::create_event_loop();
+        let r = crate::event_loop::create_event_loop();
+        match r {
+            Ok(_) => {}
+            Err(e) => {
+                println!("{:?}", e)
+            }
+        }
     }
 
     // #[test]

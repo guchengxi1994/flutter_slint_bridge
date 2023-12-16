@@ -114,6 +114,7 @@ impl Wire2Api<DialogType> for i32 {
             1 => DialogType::ConfirmDialog,
             2 => DialogType::WarningDialog,
             3 => DialogType::AboutDialog,
+            4 => DialogType::SubWindow,
             _ => unreachable!("Invalid variant for DialogType: {}", self),
         }
     }
