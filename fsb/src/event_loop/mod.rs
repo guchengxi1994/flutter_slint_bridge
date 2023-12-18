@@ -89,6 +89,8 @@ pub fn create_event_loop() -> anyhow::Result<()> {
 
     pin_win = pin_window_wrapper(pin_win);
 
+    let pin_win_handle = pin_win.as_weak();
+
     std::thread::spawn(move || loop {
         let s = rx.recv();
         if let Ok(_s) = s {
@@ -223,6 +225,10 @@ pub fn create_event_loop() -> anyhow::Result<()> {
                         about.run().unwrap();
                     }
                     DialogType::SubWindow => {
+                        if let Some(s) = my_event.title {
+                            pin_win_handle.upgrade().unwrap().set_title_name(s.into());
+                        }
+                        
                         pin_win.run().unwrap();
                     }
                 }

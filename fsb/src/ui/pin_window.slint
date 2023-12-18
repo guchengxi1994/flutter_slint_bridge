@@ -12,6 +12,7 @@ export component PinWindow inherits Window {
         property <length> dynamic_height: 100px;
         property <length> radius: 100px;
         in property <string> title_name : "Default";
+        title: title_name;
 
         in property <[ListViewItem]> todo-model: [];
 
