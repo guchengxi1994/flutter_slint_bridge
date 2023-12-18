@@ -14,7 +14,7 @@ use tao::{
     event_loop::{EventLoop, EventLoopBuilder},
     platform::windows::EventLoopBuilderExtWindows,
 };
-use tray_item::{IconSource, TrayItem};
+// use tray_item::{IconSource, TrayItem};
 
 use crate::{
     dialog::notification,
@@ -47,21 +47,23 @@ pub fn create_event_loop() -> anyhow::Result<()> {
     let event_loop: EventLoop<EventMessage> = builder.build();
     let (_tx, rx) = channel::<String>();
 
-    let tr = TrayItem::new("Weaving", IconSource::Resource("name-of-icon-in-rc-file"));
-    if let Ok(mut tray) = tr {
-        let about_tx = _tx.clone();
-        tray.add_menu_item("关于", move || {
-            about_tx.send("navigate".to_owned()).unwrap();
-        })
-        .unwrap();
-        tray.inner_mut().add_separator().unwrap();
+    // let tr = TrayItem::new("Weaving", IconSource::Resource("name-of-icon-in-rc-file"));
+    // if let Ok(mut tray) = tr {
+    //     let about_tx = _tx.clone();
+    //     tray.add_menu_item("关于", move || {
+    //         about_tx.send("navigate".to_owned()).unwrap();
+    //     })
+    //     .unwrap();
+    //     tray.inner_mut().add_separator().unwrap();
 
-        let quit_tx = _tx.clone();
-        tray.add_menu_item("Quit", move || {
-            quit_tx.send("quit".to_owned()).unwrap();
-        })
-        .unwrap();
-    }
+    //     let quit_tx = _tx.clone();
+    //     tray.add_menu_item("Quit", move || {
+    //         quit_tx.send("quit".to_owned()).unwrap();
+    //     })
+    //     .unwrap();
+    // } else {
+    //     println!("[rust] tray error : {:?}", tr.err());
+    // }
 
     // tray.add_label("Tray Label").unwrap();
 

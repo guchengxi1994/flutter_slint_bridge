@@ -35,3 +35,7 @@ pub fn send_dart_message(message: String) {
         }
     }
 }
+
+// pub fn init_tray() {
+//     crate::tray::init_tray()
+// }

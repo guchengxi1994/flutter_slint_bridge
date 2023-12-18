@@ -1,4 +1,4 @@
-extern crate embed_resource;
+// extern crate embed_resource;
 use lib_flutter_rust_bridge_codegen::{
     config_parse, frb_codegen, get_symbols_if_no_duplicates, init_logger, RawOpts,
 };
@@ -7,7 +7,8 @@ use lib_flutter_rust_bridge_codegen::{
 const RUST_INPUT: &str = "src/api.rs";
 
 fn main() {
-    embed_resource::compile("tray.rc", embed_resource::NONE);
+    // embed_resource::compile("tray.rc", embed_resource::NONE);
+    // Build::new().compile("tray.rc").unwrap();
     slint_build::compile("src/ui/pin_window.slint").unwrap();
 
     init_logger("./logs/", true).unwrap();

@@ -1,4 +1,0 @@
-aa-exe-icon ICON "D:/github_repo/flutter_slint_bridge/fsb/icons/app-icon.ico"
-name-of-icon-in-rc-file ICON "D:/github_repo/flutter_slint_bridge/fsb/icons/icon-green.ico"
-another-name-from-rc-file ICON "D:/github_repo/flutter_slint_bridge/fsb/icons/icon-red.ico"
-tray-default ICON "D:/github_repo/flutter_slint_bridge/fsb/icons/app-icon.ico"
