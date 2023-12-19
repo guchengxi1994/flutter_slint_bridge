@@ -228,7 +228,7 @@ pub fn create_event_loop() -> anyhow::Result<()> {
                         if let Some(s) = my_event.title {
                             pin_win_handle.upgrade().unwrap().set_title_name(s.into());
                         }
-                        
+
                         pin_win.run().unwrap();
                     }
                 }

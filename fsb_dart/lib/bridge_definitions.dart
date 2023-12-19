@@ -29,6 +29,10 @@ abstract class Fsb {
   Future<void> sendDartMessage({required String message, dynamic hint});
 
   FlutterRustBridgeTaskConstMeta get kSendDartMessageConstMeta;
+
+  Future<void> setItemId({required int id, dynamic hint});
+
+  FlutterRustBridgeTaskConstMeta get kSetItemIdConstMeta;
 }
 
 enum DialogType {

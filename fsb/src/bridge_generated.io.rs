@@ -26,6 +26,11 @@ pub extern "C" fn wire_send_dart_message(port_: i64, message: *mut wire_uint_8_l
     wire_send_dart_message_impl(port_, message)
 }
 
+#[no_mangle]
+pub extern "C" fn wire_set_item_id(port_: i64, id: i32) {
+    wire_set_item_id_impl(port_, id)
+}
+
 // Section: allocate functions
 
 #[no_mangle]

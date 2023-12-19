@@ -220,6 +220,20 @@ class FsbWire implements FlutterRustBridgeWireBase {
   late final _wire_send_dart_message =
       _wire_send_dart_messagePtr.asFunction<void Function(int, ffi.Pointer<wire_uint_8_list>)>();
 
+  void wire_set_item_id(
+    int port_,
+    int id,
+  ) {
+    return _wire_set_item_id(
+      port_,
+      id,
+    );
+  }
+
+  late final _wire_set_item_idPtr =
+      _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Int64, ffi.Int32)>>('wire_set_item_id');
+  late final _wire_set_item_id = _wire_set_item_idPtr.asFunction<void Function(int, int)>();
+
   ffi.Pointer<wire_EventMessage> new_box_autoadd_event_message_0() {
     return _new_box_autoadd_event_message_0();
   }

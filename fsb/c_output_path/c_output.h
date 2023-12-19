@@ -49,6 +49,8 @@ void wire_dart_message_stream(int64_t port_);
 
 void wire_send_dart_message(int64_t port_, struct wire_uint_8_list *message);
 
+void wire_set_item_id(int64_t port_, int32_t id);
+
 struct wire_EventMessage *new_box_autoadd_event_message_0(void);
 
 uint8_t *new_box_autoadd_u8_0(uint8_t value);
@@ -64,6 +66,7 @@ static int64_t dummy_method_to_enforce_bundling(void) {
     dummy_var ^= ((int64_t) (void*) wire_show_dialog);
     dummy_var ^= ((int64_t) (void*) wire_dart_message_stream);
     dummy_var ^= ((int64_t) (void*) wire_send_dart_message);
+    dummy_var ^= ((int64_t) (void*) wire_set_item_id);
     dummy_var ^= ((int64_t) (void*) new_box_autoadd_event_message_0);
     dummy_var ^= ((int64_t) (void*) new_box_autoadd_u8_0);
     dummy_var ^= ((int64_t) (void*) new_uint_8_list_0);

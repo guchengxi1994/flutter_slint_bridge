@@ -99,6 +99,23 @@ class FsbImpl implements Fsb {
         argNames: ["message"],
       );
 
+  Future<void> setItemId({required int id, dynamic hint}) {
+    var arg0 = api2wire_i32(id);
+    return _platform.executeNormal(FlutterRustBridgeTask(
+      callFfi: (port_) => _platform.inner.wire_set_item_id(port_, arg0),
+      parseSuccessData: _wire2api_unit,
+      parseErrorData: null,
+      constMeta: kSetItemIdConstMeta,
+      argValues: [id],
+      hint: hint,
+    ));
+  }
+
+  FlutterRustBridgeTaskConstMeta get kSetItemIdConstMeta => const FlutterRustBridgeTaskConstMeta(
+        debugName: "set_item_id",
+        argNames: ["id"],
+      );
+
   void dispose() {
     _platform.dispose();
   }

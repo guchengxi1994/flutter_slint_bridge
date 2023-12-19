@@ -39,3 +39,12 @@ pub fn send_dart_message(message: String) {
 // pub fn init_tray() {
 //     crate::tray::init_tray()
 // }
+
+pub fn set_item_id(id: i32) {
+    {
+        let mut i = crate::event_loop::pin_window_wrapper::ITEM_ID
+            .lock()
+            .unwrap();
+        *i = Some(id);
+    }
+}

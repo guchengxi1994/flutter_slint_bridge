@@ -1,11 +1,26 @@
 use std::rc::Rc;
+use std::sync::Mutex;
+use std::time::Duration;
 
 use crate::ui::ListViewItem;
 use crate::ui::PinWindow;
+use lazy_static::lazy_static;
+use serde::Serialize;
 use slint::ComponentHandle;
 use slint::Model;
 
 use super::{model::Rust2DartResponse, PIN_WINDOW_ITEMS, SEND_TO_DART_MESSAGE_SINK};
+
+lazy_static! {
+    pub static ref ITEM_ID: Mutex<Option<i32>> = Mutex::new(None);
+}
+
+#[derive(Serialize, Debug)]
+struct Request {
+    pub title: String,
+    #[serde(rename = "type")]
+    pub _type: i16,
+}
 
 #[allow(unused_assignments)]
 pub fn pin_window_wrapper(pin_win: PinWindow) -> PinWindow {
@@ -64,29 +79,41 @@ pub fn pin_window_wrapper(pin_win: PinWindow) -> PinWindow {
         }
     });
 
-    pin_win.on_mouse_move(move |delta_x, delta_y| {
+    pin_win.on_mouse_move({
         let pin_win_clone = pin_win_clone.unwrap();
-        let logical_pos = pin_win_clone
-            .window()
-            .position()
-            .to_logical(pin_win_clone.window().scale_factor());
-        pin_win_clone
-            .window()
-            .set_position(slint::LogicalPosition::new(
-                logical_pos.x + delta_x,
-                logical_pos.y + delta_y,
-            ));
+        move |delta_x, delta_y| {
+            let logical_pos = pin_win_clone
+                .window()
+                .position()
+                .to_logical(pin_win_clone.window().scale_factor());
+            pin_win_clone
+                .window()
+                .set_position(slint::LogicalPosition::new(
+                    logical_pos.x + delta_x,
+                    logical_pos.y + delta_y,
+                ));
+        }
+    });
+
+    pin_win.on_close_window({
+        let pin_win_clone = pin_win_clone.unwrap();
+        move || {
+            let _ = pin_win_clone.hide();
+        }
     });
 
     pin_win.on_todo_added({
         let todo_model = todo_model.clone();
-
+        let pin_win_clone = pin_win_clone.unwrap();
         move |str| {
             match SEND_TO_DART_MESSAGE_SINK.try_read() {
                 Ok(s) => match s.as_ref() {
                     Some(s0) => {
-                        let b = Rust2DartResponse::<String> {
-                            data: str.to_string(),
+                        let b = Rust2DartResponse::<Request> {
+                            data: Request {
+                                title: str.to_string(),
+                                _type: 1,
+                            },
                         };
                         s0.add(b.to_json());
                     }
@@ -100,17 +127,34 @@ pub fn pin_window_wrapper(pin_win: PinWindow) -> PinWindow {
             }
             // [TODO] 这里其实要等 flutter 端的返回
             // 创建一个变量，loop等待变量值发生改变
-
-            todo_model.push(ListViewItem {
-                checked: false,
-                title: str,
-                id: 1,
-            });
-            for i in 0..todo_model.row_count() {
-                println!("{:?}", todo_model.row_data(i));
+            pin_win_clone.on_show_loading(|| {});
+            let mut i;
+            loop {
+                std::thread::sleep(Duration::from_millis(50));
+                {
+                    i = ITEM_ID.lock().unwrap().clone();
+                }
+                if i.is_some() {
+                    break;
+                }
             }
 
             // 然后把这个 item 塞到 PIN_WINDOW_ITEMS 中
+            todo_model.push(ListViewItem {
+                checked: false,
+                title: str,
+                id: i.unwrap(),
+            });
+            // for i in 0..todo_model.row_count() {
+            //     println!("{:?}", todo_model.row_data(i));
+            // }
+
+            pin_win_clone.on_close_loading(|| {});
+
+            {
+                let mut i = ITEM_ID.lock().unwrap();
+                *i = None;
+            }
         }
     });
 

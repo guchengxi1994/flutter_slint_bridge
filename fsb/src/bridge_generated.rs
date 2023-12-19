@@ -84,6 +84,19 @@ fn wire_send_dart_message_impl(port_: MessagePort, message: impl Wire2Api<String
         },
     )
 }
+fn wire_set_item_id_impl(port_: MessagePort, id: impl Wire2Api<i32> + UnwindSafe) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap::<_, _, _, (), _>(
+        WrapInfo {
+            debug_name: "set_item_id",
+            port: Some(port_),
+            mode: FfiCallMode::Normal,
+        },
+        move || {
+            let api_id = id.wire2api();
+            move |task_callback| Result::<_, ()>::Ok(set_item_id(api_id))
+        },
+    )
+}
 // Section: wrapper structs
 
 // Section: static checks

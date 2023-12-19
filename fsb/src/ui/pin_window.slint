@@ -1,6 +1,7 @@
 
 import { VerticalBox , HorizontalBox,StandardButton,LineEdit, Button,ListView,CheckBox} from "std-widgets.slint";
 import { ListViewItem,DefaultItemView } from "default_listview_item.slint";
+import { DefaultLoading } from "loading.slint";
 
 export component PinWindow inherits Window {
         property <bool> active: false;
@@ -56,6 +57,27 @@ export component PinWindow inherits Window {
         ]
         property <bool> show-header: false;
 
+        popup := PopupWindow{
+            x: (300px-50px)/2;
+            y: (600px-50px)/2;
+
+            layout := Dialog{   
+                DefaultLoading {}
+            }
+           
+        }
+        
+        callback show_loading();
+        show_loading() => {
+            popup.show();
+        }
+
+        callback close_loading();
+        close_loading() => {
+            popup.close();
+        }
+
+        callback close_window();
 
         TouchArea {
             moved => {
@@ -69,7 +91,6 @@ export component PinWindow inherits Window {
             clicked => {
                 if (!root.active){
                     root.active = !root.active;
-                    
                 }
                 // root.active = !root.active;
             }
@@ -97,12 +118,13 @@ export component PinWindow inherits Window {
                             height: 30px;
                         }
                         Rectangle {
-                            width: dynamic_width -70px ;
+                            width: dynamic_width -100px ;
                             height: 30px;
                             Text {
                                 text: title_name;
                             }
                         }
+                        
                         TouchArea {
                             width: 30px;
                             height: 30px;
@@ -110,6 +132,17 @@ export component PinWindow inherits Window {
                                 root.active = !root.active;
                             }
                             Image {source: @image-url("hide.png") ;
+                            width: 20px;
+                            height: 20px;}
+                        }
+
+                        TouchArea {
+                            width: 30px;
+                            height: 30px;
+                            clicked => {
+                                close_window()
+                            }
+                            Image {source: @image-url("close.png") ;
                             width: 20px;
                             height: 20px;}
                         }
@@ -188,7 +221,10 @@ export component PinWindow inherits Window {
                         }
 
                         Button {
-                            clicked => { root.re-sync(); }
+                            clicked => { 
+                                // popup.show();
+                                root.re-sync(); 
+                            }
 
                             text: "重新同步数据";
                         }

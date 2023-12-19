@@ -26,6 +26,11 @@ pub fn wire_send_dart_message(port_: MessagePort, message: String) {
     wire_send_dart_message_impl(port_, message)
 }
 
+#[wasm_bindgen]
+pub fn wire_set_item_id(port_: MessagePort, id: i32) {
+    wire_set_item_id_impl(port_, id)
+}
+
 // Section: allocate functions
 
 // Section: related functions
