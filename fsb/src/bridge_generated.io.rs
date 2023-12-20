@@ -87,6 +87,7 @@ impl Wire2Api<EventMessage> for wire_EventMessage {
             content: self.content.wire2api(),
             dialog_type: self.dialog_type.wire2api(),
             duration_in_sec: self.duration_in_sec.wire2api(),
+            data: self.data.wire2api(),
         }
     }
 }
@@ -116,6 +117,7 @@ pub struct wire_EventMessage {
     content: *mut wire_uint_8_list,
     dialog_type: i32,
     duration_in_sec: *mut u8,
+    data: *mut wire_uint_8_list,
 }
 
 #[repr(C)]
@@ -160,6 +162,7 @@ impl NewWithNullPtr for wire_EventMessage {
             content: core::ptr::null_mut(),
             dialog_type: Default::default(),
             duration_in_sec: core::ptr::null_mut(),
+            data: core::ptr::null_mut(),
         }
     }
 }

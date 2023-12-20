@@ -60,8 +60,8 @@ impl Wire2Api<EventMessage> for JsValue {
         let self_ = self.dyn_into::<JsArray>().unwrap();
         assert_eq!(
             self_.length(),
-            5,
-            "Expected 5 elements, got {}",
+            6,
+            "Expected 6 elements, got {}",
             self_.length()
         );
         EventMessage {
@@ -70,6 +70,7 @@ impl Wire2Api<EventMessage> for JsValue {
             content: self_.get(2).wire2api(),
             dialog_type: self_.get(3).wire2api(),
             duration_in_sec: self_.get(4).wire2api(),
+            data: self_.get(5).wire2api(),
         }
     }
 }

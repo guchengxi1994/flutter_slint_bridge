@@ -2,7 +2,11 @@ pub mod model;
 pub mod pin_window_wrapper;
 pub mod utils;
 
-use crate::{dialog::about_dialog, ui::PinWindow};
+use crate::{
+    dialog::about_dialog,
+    event_loop::{model::InputPinWindowItemList, pin_window_wrapper::pin_window_handle_wrapper},
+    ui::PinWindow,
+};
 use std::{
     sync::{mpsc::Sender, Mutex, RwLock},
     time::Duration,
@@ -87,9 +91,9 @@ pub fn create_event_loop() -> anyhow::Result<()> {
     let confirm = crate::dialog::confirm_dialog::ConfirmDialog::new().unwrap();
     let mut pin_win = PinWindow::new().unwrap();
 
-    pin_win = pin_window_wrapper(pin_win);
+    // pin_win = pin_window_wrapper(pin_win);
 
-    let pin_win_handle = pin_win.as_weak();
+    let mut pin_win_handle = pin_win.as_weak();
 
     std::thread::spawn(move || loop {
         let s = rx.recv();
@@ -101,6 +105,7 @@ pub fn create_event_loop() -> anyhow::Result<()> {
                     content: None,
                     dialog_type: DialogType::AboutDialog,
                     duration_in_sec: None,
+                    data: None,
                 }));
             }
             if _s == "quit" {
@@ -110,6 +115,7 @@ pub fn create_event_loop() -> anyhow::Result<()> {
                     content: Some("Quit...".to_string()),
                     dialog_type: DialogType::Notification,
                     duration_in_sec: None,
+                    data: None,
                 }));
                 std::thread::spawn(|| {
                     std::thread::sleep(Duration::from_secs(3));
@@ -227,6 +233,21 @@ pub fn create_event_loop() -> anyhow::Result<()> {
                     DialogType::SubWindow => {
                         if let Some(s) = my_event.title {
                             pin_win_handle.upgrade().unwrap().set_title_name(s.into());
+                        }
+
+                        let r = InputPinWindowItemList::from_str(
+                            my_event.data.unwrap_or("".to_string()),
+                        );
+
+                        match r {
+                            Ok(_r) => {
+                                pin_win_handle =
+                                    pin_window_handle_wrapper(pin_win_handle.clone(), _r);
+                            }
+                            Err(_) => {
+                                pin_win_handle =
+                                    pin_window_handle_wrapper(pin_win_handle.clone(), vec![]);
+                            }
                         }
 
                         pin_win.run().unwrap();

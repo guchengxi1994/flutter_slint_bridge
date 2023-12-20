@@ -183,7 +183,7 @@ mod tests {
     fn test_drag_window3() -> anyhow::Result<()> {
         let mut pin_win = crate::ui::PinWindow::new()?;
 
-        pin_win = crate::event_loop::pin_window_wrapper::pin_window_wrapper(pin_win);
+        pin_win = crate::event_loop::pin_window_wrapper::pin_window_wrapper(pin_win, vec![]);
 
         pin_win.run()?;
         anyhow::Ok(())

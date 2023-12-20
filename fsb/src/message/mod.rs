@@ -18,6 +18,7 @@ pub struct EventMessage {
     pub content: Option<String>,
     pub dialog_type: DialogType,
     pub duration_in_sec: Option<u8>,
+    pub data: Option<String>,
 }
 
 impl EventMessage {
@@ -28,6 +29,7 @@ impl EventMessage {
             content: Some("Default content".to_string()),
             dialog_type: DialogType::Notification,
             duration_in_sec: Some(3),
+            data: None,
         };
     }
 }

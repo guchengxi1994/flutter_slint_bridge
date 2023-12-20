@@ -25,6 +25,7 @@ typedef struct wire_EventMessage {
   struct wire_uint_8_list *content;
   int32_t dialog_type;
   uint8_t *duration_in_sec;
+  struct wire_uint_8_list *data;
 } wire_EventMessage;
 
 typedef struct DartCObject *WireSyncReturn;
