@@ -23,6 +23,7 @@ struct Request {
     pub _type: i16,
 }
 
+#[allow(dead_code)]
 #[allow(unused_assignments)]
 pub fn pin_window_wrapper(pin_win: PinWindow, inited_items: Vec<PinWindowItem>) -> PinWindow {
     let pin_win_clone = pin_win.as_weak();
@@ -47,8 +48,8 @@ pub fn pin_window_wrapper(pin_win: PinWindow, inited_items: Vec<PinWindowItem>) 
         .set_position(slint::LogicalPosition::new(0., 0.));
 
     pin_win.on_re_sync({
-        let todo_model = todo_model.clone();
-        let pin_win_clone = pin_win_clone.unwrap();
+        let _todo_model = todo_model.clone();
+        let _pin_win_clone = pin_win_clone.unwrap();
         move || {
             // handle.upgrade().unwrap().set_todo_model(todo_model.clone().into())
             // TODO 告诉dart重新同步
@@ -195,8 +196,8 @@ pub fn pin_window_handle_wrapper(
         .set_position(slint::LogicalPosition::new(0., 0.));
 
     pin_win_handle.upgrade().unwrap().on_re_sync({
-        let todo_model = todo_model.clone();
-        let pin_win_clone = pin_win_clone.unwrap();
+        let _todo_model = todo_model.clone();
+        let _pin_win_clone = pin_win_clone.unwrap();
         move || {
             // handle.upgrade().unwrap().set_todo_model(todo_model.clone().into())
             // TODO 告诉dart重新同步
@@ -307,10 +308,53 @@ pub fn pin_window_handle_wrapper(
         }
     });
 
+    pin_win_handle.upgrade().unwrap().on_focus_main(move || {
+        match SEND_TO_DART_MESSAGE_SINK.try_read() {
+            Ok(s) => match s.as_ref() {
+                Some(s0) => {
+                    let _b = Rust2DartResponse::<Request> {
+                        data: Request {
+                            title: "".to_string(),
+                            _type: 3,
+                        },
+                    };
+                    s0.add(_b.to_json());
+                }
+                None => {
+                    println!("[rust-error] Stream is None");
+                }
+            },
+            Err(_) => {
+                println!("[rust-error] Stream read error");
+            }
+        }
+    });
+
     pin_win_handle
         .upgrade()
         .unwrap()
-        .on_item_status_changed(move |b, index| println!("{}-{}", index, b));
+        .on_item_status_changed(move |b, index| {
+            println!("{}-{}", index, b);
+            match SEND_TO_DART_MESSAGE_SINK.try_read() {
+                Ok(s) => match s.as_ref() {
+                    Some(s0) => {
+                        let _b = Rust2DartResponse::<Request> {
+                            data: Request {
+                                title: format!("{}", index),
+                                _type: 2,
+                            },
+                        };
+                        s0.add(_b.to_json());
+                    }
+                    None => {
+                        println!("[rust-error] Stream is None");
+                    }
+                },
+                Err(_) => {
+                    println!("[rust-error] Stream read error");
+                }
+            }
+        });
 
     pin_win_handle
         .upgrade()

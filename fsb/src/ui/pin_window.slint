@@ -5,7 +5,7 @@ import { DefaultLoading } from "loading.slint";
 
 export component PinWindow inherits Window {
         property <bool> active: false;
-
+        icon: @image-url("icon.png");
         no-frame: true;
         always-on-top: true;
         background: transparent;
@@ -78,6 +78,7 @@ export component PinWindow inherits Window {
         }
 
         callback close_window();
+        callback focus_main();
 
         TouchArea {
             moved => {
@@ -118,11 +119,29 @@ export component PinWindow inherits Window {
                             height: 30px;
                         }
                         Rectangle {
-                            width: dynamic_width -100px ;
+                            width: dynamic_width -130px ;
                             height: 30px;
-                            Text {
-                                text: title_name;
+                            HorizontalLayout {
+                                alignment: start;
+                                VerticalLayout {
+                                    alignment: center;
+                                    Text {
+                                        text: title_name;
+                                    }
+                                }
+                                
                             }
+                        }
+
+                        TouchArea {
+                            width: 30px;
+                            height: 30px;
+                            clicked => {
+                                focus_main()
+                            }
+                            Image {source: @image-url("focus.png") ;
+                            width: 20px;
+                            height: 20px;}
                         }
                         
                         TouchArea {
@@ -204,31 +223,42 @@ export component PinWindow inherits Window {
                             }
                         }
                     }
-                    HorizontalBox {
-                        padding: 0px;
-                        alignment: end;
 
-                        Button {
-                            text: root.operation_str;
-                            clicked => {
-                                root.show-header = !root.show-header;
-                                if (show-header){
-                                    root.operation_str = "隐藏操作"
-                                }else{
-                                    root.operation_str = "显示操作"
-                                }
-                             }
-                        }
-
-                        Button {
-                            clicked => { 
-                                // popup.show();
-                                root.re-sync(); 
+                    TouchArea {
+                        height: 30px;
+                        moved => {
+                            if (root.active){
+                                root.mouse_move(self.mouse-x - self.pressed-x, self.mouse-y - self.pressed-y);
                             }
-
-                            text: "重新同步数据";
+                        }
+                        HorizontalBox {
+                            padding: 0px;
+                            alignment: end;
+    
+                            Button {
+                                text: root.operation_str;
+                                clicked => {
+                                    root.show-header = !root.show-header;
+                                    if (show-header){
+                                        root.operation_str = "隐藏操作"
+                                    }else{
+                                        root.operation_str = "显示操作"
+                                    }
+                                 }
+                            }
+    
+                            Button {
+                                clicked => { 
+                                    // popup.show();
+                                    root.re-sync(); 
+                                }
+    
+                                text: "重新同步数据";
+                            }
                         }
                     }
+
+                   
                 }
             }
 

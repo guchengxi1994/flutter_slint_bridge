@@ -26,7 +26,6 @@ use crate::{
     message::{DialogType, EventMessage, PROXY},
 };
 
-use crate::event_loop::pin_window_wrapper::pin_window_wrapper;
 use lazy_static::lazy_static;
 
 use self::model::Rust2DartResponse;
@@ -89,7 +88,7 @@ pub fn create_event_loop() -> anyhow::Result<()> {
 
     let notification = crate::dialog::notification::Notification::new().unwrap();
     let confirm = crate::dialog::confirm_dialog::ConfirmDialog::new().unwrap();
-    let mut pin_win = PinWindow::new().unwrap();
+    let pin_win = PinWindow::new().unwrap();
 
     // pin_win = pin_window_wrapper(pin_win);
 
