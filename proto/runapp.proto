@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+package runapp;
+
+service RunNewApp { rpc SendMsg(RunAppRequest) returns (RunAppResponse); }
+
+message RunAppRequest {
+    string uuid = 1;
+    string msg = 2;
+}
+
+message RunAppResponse { string message = 1;}

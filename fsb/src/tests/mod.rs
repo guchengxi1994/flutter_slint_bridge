@@ -188,4 +188,29 @@ mod tests {
         pin_win.run()?;
         anyhow::Ok(())
     }
+
+    #[test]
+    fn test_command() {
+        let handle = std::thread::spawn(|| {
+            let ps_child = std::process::Command::new("ping")
+                .arg("www.baidu.com")
+                .stdout(std::process::Stdio::piped())
+                .spawn()
+                .unwrap();
+
+            let output = ps_child.wait_with_output();
+
+            match output {
+                Ok(_ot) => {
+                    let result = std::str::from_utf8(&_ot.stdout).unwrap();
+                    println!("{:?}", result);
+                }
+                Err(_e) => {
+                    println!("{:?}", _e);
+                }
+            }
+        });
+
+        let _ = handle.join().unwrap();
+    }
 }

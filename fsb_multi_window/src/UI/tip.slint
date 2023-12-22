@@ -1,0 +1,64 @@
+import { TextEdit } from "std-widgets.slint";
+
+export component Tip inherits Window {
+    width: 200px;
+    height: 200px;
+    no-frame: true;
+
+    in property <string> window-title:"default";
+    in property <string> content:"";
+
+    callback mouse_move(length, length);
+    callback close_window();
+    
+    VerticalLayout {
+            TouchArea {
+                moved => {
+                    root.mouse_move(self.mouse-x - self.pressed-x, self.mouse-y - self.pressed-y);
+                }
+            Rectangle {
+                height: 30px;
+                HorizontalLayout {
+                    alignment: space-around;
+                    Image {
+                        source: @image-url("icon.png") ;
+                        width: 30px;
+                        height: 30px;
+                    }
+                    Rectangle {
+                        width: root.width -130px ;
+                        height: 30px;
+                        HorizontalLayout {
+                            alignment: start;
+                            VerticalLayout {
+                                alignment: center;
+                                Text {
+                                    text: root.window-title;
+                                }
+                            }
+                            
+                        }
+                    }
+
+                    TouchArea {
+                        width: 30px;
+                        height: 30px;
+                        clicked => {
+                            close_window()
+                        }
+                        Image {source: @image-url("close.png") ;
+                        width: 20px;
+                        height: 20px;}
+                    }
+                }
+            }}
+            Rectangle {
+                TextEdit {
+                    font-size: 14px;
+                    width: parent.width;
+                    height: parent.height;
+                    text: root.content;
+                }
+            }
+    }
+}

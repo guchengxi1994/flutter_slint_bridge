@@ -6,7 +6,8 @@ use lib_flutter_rust_bridge_codegen::{
 /// Path of input Rust code
 const RUST_INPUT: &str = "src/api.rs";
 
-fn main() {
+fn main() -> Result<(), Box<dyn std::error::Error>> {
+    tonic_build::compile_protos("../proto/runapp.proto")?;
     // embed_resource::compile("tray.rc", embed_resource::NONE);
     // Build::new().compile("tray.rc").unwrap();
     slint_build::compile("src/ui/pin_window.slint").unwrap();
@@ -26,4 +27,6 @@ fn main() {
     let all_symbols = get_symbols_if_no_duplicates(&all_configs).unwrap();
     assert_eq!(all_configs.len(), 1);
     frb_codegen(&all_configs[0], &all_symbols).unwrap();
+
+    Ok(())
 }
